@@ -1,0 +1,114 @@
+[
+  {
+    "id": 7,
+    "term": "Spring 2026",
+    "name": "Shifa Tantu",
+    "role": "Community Manager",
+    "rank": 3
+  },
+  {
+    "id": 5,
+    "term": "Spring 2026",
+    "name": "Kamal",
+    "role": "Entrepreneurship Coordinator",
+    "rank": 2
+  },
+  {
+    "id": 1777506421749,
+    "term": "Spring 2026",
+    "name": "Ahad Ahmed",
+    "role": "President",
+    "rank": 1
+  },
+  {
+    "id": 6,
+    "term": "Spring 2026",
+    "name": "Talha",
+    "role": "Project Coordinator",
+    "rank": 4
+  },
+  {
+    "id": 8,
+    "term": "Spring 2026",
+    "name": "Zahraa Kachroo",
+    "role": "Social Media Lead",
+    "rank": 5
+  },
+  {
+    "id": 1777506487969,
+    "term": "Spring 2026",
+    "name": "Ruman Saiyed",
+    "role": "Treasurer",
+    "rank": 6
+  },
+  {
+    "id": 1777506503890,
+    "term": "Spring 2026",
+    "name": "Haroon",
+    "role": "Treasurer",
+    "rank": 7
+  },
+  {
+    "id": 1777506519061,
+    "term": "Spring 2026",
+    "name": "Ali Zaidi",
+    "role": "Treasurer",
+    "rank": 8
+  },
+  {
+    "id": 1777506403264,
+    "term": "Fall 2025",
+    "name": "Ahad Ahmed",
+    "role": "President",
+    "rank": 1
+  },
+  {
+    "id": 1777506282222,
+    "term": "Fall 2025",
+    "name": "Yaweer Mahmood",
+    "role": "Treasurer",
+    "rank": 2
+  },
+  {
+    "id": 2,
+    "term": "Fall 2025",
+    "name": "Madina Malik",
+    "role": "Vice President",
+    "rank": 3
+  },
+  {
+    "id": 1777506312379,
+    "term": "Fall 2025",
+    "name": "Ahmed",
+    "role": "Vice President",
+    "rank": 4
+  },
+  {
+    "id": 1777506345232,
+    "term": "Fall 2025",
+    "name": "Kamal",
+    "role": "VP for entrepreneurship",
+    "rank": 5
+  },
+  {
+    "id": 1777506328069,
+    "term": "Fall 2025",
+    "name": "Talhah",
+    "role": "VP for projects",
+    "rank": 6
+  },
+  {
+    "id": 1777506355807,
+    "term": "Fall 2025",
+    "name": "Shifa",
+    "role": "VP of community",
+    "rank": 7
+  },
+  {
+    "id": 1777506368137,
+    "term": "Fall 2025",
+    "name": "Zaraa",
+    "role": "VP Social media",
+    "rank": 8
+  }
+]

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MTC Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #406AAF;
+      --blue2: #427AB5;
+      --yellow: #F7DD7D;
+      --cream: #FFE8BE;
+      --white: #ffffff;
+      --slate: #334155;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--blue) 0%, #2d4f8a 100%);
+      min-height: 100vh;
+      color: var(--slate);
+    }
+
+    header {
+      background: rgba(255,255,255,0.1);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header .logo { font-size: 1.5rem; font-weight: 900; color: var(--yellow); letter-spacing: 0.15em; }
+    header h1 { font-size: 1rem; font-weight: 600; color: rgba(255,255,255,0.85); letter-spacing: 0.1em; }
+
+    header .back-btn {
+      margin-left: auto;
+      background: var(--yellow);
+      color: var(--blue);
+      border: none;
+      border-radius: 999px;
+      padding: 0.5rem 1.25rem;
+      font-weight: 700;
+      font-size: 0.8rem;
+      cursor: pointer;
+      text-decoration: none;
+      letter-spacing: 0.1em;
+      transition: transform 0.15s, opacity 0.15s;
+    }
+    header .back-btn:hover { transform: translateY(-1px); opacity: 0.9; }
+
+    .push-tip {
+      background: rgba(247,221,125,0.15);
+      border: 1px solid rgba(247,221,125,0.4);
+      border-radius: 1rem;
+      color: var(--yellow);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.65rem 1.25rem;
+      text-align: center;
+      letter-spacing: 0.04em;
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } }
+
+    .card { background: var(--white); border-radius: 2rem; box-shadow: 0 8px 32px rgba(0,0,0,0.18); padding: 2rem; }
+    .card h2 { font-size: 1.4rem; font-weight: 800; color: var(--blue); margin-bottom: 0.4rem; }
+    .card .subtitle { font-size: 0.82rem; color: #64748b; margin-bottom: 1.5rem; line-height: 1.5; }
+
+    label { display: block; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.08em; color: var(--blue); margin-bottom: 0.35rem; text-transform: uppercase; }
+
+    input[type="text"], input[type="date"], input[type="time"], input[type="url"], select, textarea {
+      width: 100%; border: 1.5px solid #e2e8f0; border-radius: 0.85rem;
+      padding: 0.65rem 0.85rem; font-size: 0.9rem; font-family: 'Inter', sans-serif;
+      color: var(--slate); outline: none; transition: border-color 0.2s; margin-bottom: 1rem;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--blue); }
+    textarea { min-height: 80px; resize: vertical; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    .btn-primary {
+      width: 100%; background: var(--blue); color: var(--white); border: none;
+      border-radius: 0.85rem; padding: 0.8rem; font-size: 0.85rem; font-weight: 700;
+      letter-spacing: 0.12em; cursor: pointer; text-transform: uppercase;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: var(--blue2); transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    .btn-danger {
+      background: #fee2e2; color: #dc2626; border: none; border-radius: 0.5rem;
+      padding: 0.3rem 0.7rem; font-size: 0.75rem; font-weight: 700; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-danger:hover { background: #fecaca; }
+
+    .rank-btn {
+      background: var(--yellow); color: var(--blue); border: none; border-radius: 0.4rem;
+      width: 28px; height: 28px; font-weight: 700; cursor: pointer; font-size: 0.7rem; transition: all 0.2s;
+    }
+    .rank-btn:hover:not(:disabled) { background: #ffd700; transform: scale(1.08); }
+    .rank-btn:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; opacity: 0.5; }
+
+    .list-section { margin-top: 1.75rem; }
+    .list-section h3 {
+      font-size: 0.8rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--blue); margin-bottom: 0.85rem; padding-bottom: 0.5rem; border-bottom: 1.5px solid #e2e8f0;
+    }
+
+    .item-row { display: flex; align-items: center; gap: 0.75rem; padding: 0.65rem 0; border-bottom: 1px solid #f1f5f9; }
+    .item-row:last-child { border-bottom: none; }
+    .item-info { flex: 1; min-width: 0; }
+    .item-info .name { font-weight: 700; font-size: 0.88rem; color: var(--slate); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .item-info .meta { font-size: 0.75rem; color: #94a3b8; margin-top: 0.15rem; }
+
+    .badge { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; border-radius: 999px; padding: 0.2rem 0.55rem; }
+    .badge-red { background: #fee2e2; color: #dc2626; }
+    .badge-green { background: #dcfce7; color: #16a34a; }
+
+    .empty-state { text-align: center; color: #94a3b8; font-size: 0.83rem; padding: 1.5rem 0; }
+
+    .thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 0.6rem; border: 2px solid #e2e8f0; flex-shrink: 0; }
+    .thumb-placeholder { width: 48px; height: 48px; border-radius: 0.6rem; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
+
+    .file-upload-area {
+      border: 2px dashed #c7d2fe; border-radius: 1rem; padding: 1.5rem;
+      text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 1rem; background: #f8faff;
+    }
+    .file-upload-area:hover { border-color: var(--blue); background: #eef2ff; }
+    .file-upload-area input[type="file"] { display: none; }
+    .file-upload-area .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+    .file-upload-area p { font-size: 0.82rem; color: #64748b; margin: 0; }
+    .file-upload-area p strong { color: var(--blue); }
+
+    .preview-imgs { display: grid; grid-template-columns: repeat(auto-fill, minmax(70px, 1fr)); gap: 0.5rem; margin-bottom: 1rem; }
+    .preview-imgs img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 0.75rem; border: 2px solid #e2e8f0; }
+
+    .toast {
+      position: fixed; bottom: 2rem; right: 2rem; background: #1e293b; color: white;
+      padding: 0.85rem 1.5rem; border-radius: 1rem; font-size: 0.85rem; font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25); opacity: 0; transform: translateY(10px);
+      transition: opacity 0.25s, transform 0.25s; pointer-events: none; z-index: 999;
+    }
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ── SERVER STATUS ── */
+    .server-status {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      font-size: 0.75rem; font-weight: 700; border-radius: 999px;
+      padding: 0.25rem 0.75rem; letter-spacing: 0.08em;
+    }
+    .server-status.ok { background: #dcfce7; color: #16a34a; }
+    .server-status.err { background: #fee2e2; color: #dc2626; }
+    .server-status .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+    /* ── PASSWORD GATE ── */
+    #gate {
+      position: fixed; inset: 0; z-index: 9999;
+      background: linear-gradient(135deg, #2d4f8a 0%, #406AAF 60%, #1a3460 100%);
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.4s, visibility 0.4s;
+    }
+    #gate.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .gate-card {
+      background: rgba(255,255,255,0.08); backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.18); border-radius: 2rem;
+      padding: 3rem 2.5rem; width: 100%; max-width: 420px;
+      text-align: center; box-shadow: 0 24px 64px rgba(0,0,0,0.35);
+    }
+    .gate-lock { font-size: 3.5rem; margin-bottom: 0.5rem; }
+    .gate-card h2 { font-size: 1.6rem; font-weight: 900; color: #fff; letter-spacing: 0.15em; margin-bottom: 0.25rem; }
+    .gate-card p { font-size: 0.82rem; color: rgba(255,255,255,0.6); margin-bottom: 2rem; }
+    .gate-input-wrap { position: relative; margin-bottom: 1rem; }
+    .gate-input-wrap input {
+      width: 100%; background: rgba(255,255,255,0.12); border: 1.5px solid rgba(255,255,255,0.25);
+      border-radius: 1rem; padding: 0.9rem 3rem 0.9rem 1.1rem; font-size: 1rem;
+      font-family: 'Inter', sans-serif; color: #fff; outline: none; letter-spacing: 0.08em;
+      transition: border-color 0.2s; margin-bottom: 0;
+    }
+    .gate-input-wrap input::placeholder { color: rgba(255,255,255,0.4); }
+    .gate-input-wrap input:focus { border-color: var(--yellow); }
+    .gate-toggle { position: absolute; right: 1rem; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.1rem; cursor: pointer; padding: 0; }
+    .gate-btn { width: 100%; background: var(--yellow); color: var(--blue); border: none; border-radius: 1rem; padding: 0.9rem; font-size: 0.95rem; font-weight: 800; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; transition: background 0.2s, transform 0.15s; margin-top: 0.75rem; }
+    .gate-btn:hover { background: #FFE8BE; transform: translateY(-1px); }
+    .gate-error { color: #fca5a5; font-size: 0.8rem; margin-top: 0.6rem; min-height: 1.2em; font-weight: 600; }
+    @keyframes shake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-8px); } 40%,80% { transform: translateX(8px); } }
+    .shake { animation: shake 0.4s ease; }
+  </style>
+</head>
+<body>
+
+  <!-- PASSWORD GATE -->
+  <div id="gate">
+    <div class="gate-card">
+      <div class="gate-lock">🔐</div>
+      <h2>MTC ADMIN</h2>
+      <p>Enter your admin password to continue</p>
+      <div class="gate-input-wrap">
+        <input type="password" id="gate-pw" placeholder="Password" onkeydown="if(event.key==='Enter') checkPassword()" />
+        <button class="gate-toggle" onclick="togglePw()" title="Show/hide password">👁</button>
+      </div>
+      <div class="gate-error" id="gate-err"></div>
+      <button class="gate-btn" onclick="checkPassword()">Unlock →</button>
+    </div>
+  </div>
+
+  <header>
+    <div class="logo">MTC</div>
+    <h1>Admin Panel</h1>
+    <span class="server-status err" id="srv-status">
+      <span class="dot"></span> <span id="srv-label">Checking server…</span>
+    </span>
+    <a href="/" class="back-btn">← Back to Site</a>
+  </header>
+
+  <div class="container">
+    <div class="push-tip">
+      💡 After adding events or uploading photos, <strong>push to GitHub</strong> to make them live for everyone.
+      &nbsp;|&nbsp; Run <code>git add . &amp;&amp; git commit -m "update content" &amp;&amp; git push</code>
+    </div>
+
+    <div class="grid-2">
+      <!-- EVENTS CARD -->
+      <div class="card">
+        <h2>📅 Manage Events</h2>
+        <p class="subtitle">Add upcoming events. Past events are automatically hidden on the website after their date passes.</p>
+
+        <label>Event Title</label>
+        <input type="text" id="ev-title" placeholder="e.g. MTC General Meeting" />
+
+        <div class="row">
+          <div>
+            <label>Date</label>
+            <input type="date" id="ev-date" />
+          </div>
+          <div>
+            <label>Tag / Category</label>
+            <select id="ev-tag">
+              <option value="Meeting">Meeting</option>
+              <option value="Workshop">Workshop</option>
+              <option value="Networking">Networking</option>
+              <option value="Social">Social</option>
+              <option value="Hackathon">Hackathon</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div>
+            <label>Start Time</label>
+            <input type="time" id="ev-time-start" />
+          </div>
+          <div>
+            <label>End Time</label>
+            <input type="time" id="ev-time-end" />
+          </div>
+        </div>
+
+        <label>Description</label>
+        <textarea id="ev-desc" placeholder="Brief description of the event..."></textarea>
+
+        <button class="btn-primary" id="ev-add-btn" onclick="addEvent()">➕ Add Event</button>
+
+        <div class="list-section">
+          <h3>All Events</h3>
+          <div id="events-list"></div>
+        </div>
+      </div>
+
+      <!-- GALLERY CARD -->
+      <div class="card">
+        <h2>🖼️ Manage Gallery</h2>
+        <p class="subtitle">Upload photos — they're saved to the <code>public/gallery/</code> folder and pushed with your code to GitHub.</p>
+
+        <label>Photo Caption</label>
+        <input type="text" id="gal-caption" placeholder="e.g. Fall Kickoff 2024" />
+
+        <label>Upload Image(s)</label>
+        <div class="file-upload-area" onclick="document.getElementById('gal-file').click()" id="drop-zone">
+          <input type="file" id="gal-file" accept="image/*" multiple onchange="handleFileSelect(event)" />
+          <div class="icon">📷</div>
+          <p><strong>Click to upload</strong> or drag & drop</p>
+          <p>PNG, JPG, WEBP — multiple files OK</p>
+        </div>
+
+        <div class="preview-imgs" id="preview-imgs"></div>
+
+        <button class="btn-primary" id="gal-add-btn" onclick="addGalleryItem()">➕ Add to Gallery</button>
+
+        <div class="list-section">
+          <h3>Gallery Photos</h3>
+          <div id="gallery-list"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BOARD MEMBERS CARD -->
+    <div class="card">
+      <h2>👥 Manage Board Members</h2>
+      <p class="subtitle">Add or remove board members for each term. Members are saved to <code>public/data/board.json</code>.</p>
+
+      <div class="row">
+        <div>
+          <label>Select Term</label>
+          <select id="board-term">
+            <option value="Fall 2025">Fall 2025</option>
+            <option value="Spring 2026">Spring 2026</option>
+            <option value="Fall 2026">Fall 2026</option>
+          </select>
+        </div>
+        <div>
+          <label>Member Name</label>
+          <input type="text" id="board-name" placeholder="e.g. Ahad Ahmed" />
+        </div>
+      </div>
+
+      <label>Role / Position</label>
+      <input type="text" id="board-role" placeholder="e.g. President, Treasurer, Event Coordinator" />
+
+      <button class="btn-primary" id="board-add-btn" onclick="addBoardMember()">➕ Add Board Member</button>
+
+      <div class="list-section">
+        <h3>Current Board Members</h3>
+        <div id="board-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const API = 'http://localhost:3001';
+    const CORRECT_PW = 'Mtc@2026';
+    const SESSION_KEY = 'mtc_admin_auth';
+
+    // ── PASSWORD GATE ──
+    function checkPassword() {
+      const input = document.getElementById('gate-pw');
+      const errEl = document.getElementById('gate-err');
+      if (input.value === CORRECT_PW) {
+        sessionStorage.setItem(SESSION_KEY, '1');
+        document.getElementById('gate').classList.add('hidden');
+        errEl.textContent = '';
+        init();
+      } else {
+        errEl.textContent = '❌ Incorrect password. Try again.';
+        input.value = '';
+        input.classList.add('shake');
+        setTimeout(() => input.classList.remove('shake'), 400);
+        input.focus();
+      }
+    }
+    function togglePw() {
+      const input = document.getElementById('gate-pw');
+      input.type = input.type === 'password' ? 'text' : 'password';
+    }
+    // Auto-unlock if same session
+    if (sessionStorage.getItem(SESSION_KEY) === '1') {
+      document.getElementById('gate').classList.add('hidden');
+    } else {
+      setTimeout(() => document.getElementById('gate-pw').focus(), 100);
+    }
+
+    // ── TOAST ──
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(() => t.classList.remove('show'), 2800);
+    }
+
+    // ── SERVER STATUS CHECK ──
+    async function checkServer() {
+      const el = document.getElementById('srv-status');
+      const lbl = document.getElementById('srv-label');
+      try {
+        const r = await fetch(`${API}/api/events`);
+        if (r.ok) {
+          el.className = 'server-status ok';
+          lbl.textContent = 'Admin server connected';
+          return true;
+        }
+      } catch {}
+      el.className = 'server-status err';
+      lbl.textContent = 'Server offline — run: npm run admin';
+      return false;
+    }
+
+    // ── FORMAT HELPERS ──
+    function fmt12(timeStr) {
+      if (!timeStr) return '';
+      const [hh, mm] = timeStr.split(':');
+      const h = parseInt(hh, 10);
+      const ampm = h >= 12 ? 'PM' : 'AM';
+      return `${h % 12 || 12}:${mm} ${ampm}`;
+    }
+    function fmtDate(dateStr) {
+      if (!dateStr) return '';
+      const [y, m, d] = dateStr.split('-');
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      return `${months[parseInt(m)-1]} ${parseInt(d)}, ${y}`;
+    }
+    function isPast(dateStr) {
+      const today = new Date(); today.setHours(0,0,0,0);
+      return new Date(dateStr + 'T00:00:00') < today;
+    }
+
+    // ── EVENTS ──
+    async function addEvent() {
+      const btn = document.getElementById('ev-add-btn');
+      const title = document.getElementById('ev-title').value.trim();
+      const date  = document.getElementById('ev-date').value;
+      const start = document.getElementById('ev-time-start').value;
+      const end   = document.getElementById('ev-time-end').value;
+      const tag   = document.getElementById('ev-tag').value;
+      const desc  = document.getElementById('ev-desc').value.trim();
+
+      if (!title || !date) { showToast('⚠️ Title and date are required.'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      try {
+        const r = await fetch(`${API}/api/events`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, date, start, end, tag, desc })
+        });
+        if (!r.ok) throw new Error();
+        showToast('✅ Event saved to events.json!');
+        document.getElementById('ev-title').value = '';
+        document.getElementById('ev-date').value = '';
+        document.getElementById('ev-time-start').value = '';
+        document.getElementById('ev-time-end').value = '';
+        document.getElementById('ev-desc').value = '';
+        await renderEvents();
+      } catch {
+        showToast('❌ Could not save. Is the admin server running?');
+      }
+      btn.disabled = false;
+      btn.textContent = '➕ Add Event';
+    }
+
+    async function deleteEvent(id) {
+      if (!confirm('Delete this event?')) return;
+      await fetch(`${API}/api/events/${id}`, { method: 'DELETE' });
+      showToast('🗑️ Event deleted.');
+      await renderEvents();
+    }
+
+    async function renderEvents() {
+      const container = document.getElementById('events-list');
+      try {
+        const events = await fetch(`${API}/api/events`).then(r => r.json());
+        if (!events.length) {
+          container.innerHTML = '<div class="empty-state">No events yet.</div>';
+          return;
+        }
+        container.innerHTML = events.map(ev => {
+          const past = isPast(ev.date);
+          const badge = past ? '<span class="badge badge-red">Past</span>' : '<span class="badge badge-green">Upcoming</span>';
+          const time = (ev.start || ev.end) ? fmt12(ev.start) + (ev.end ? ' – ' + fmt12(ev.end) : '') : '';
+          return `<div class="item-row">
+            <div class="thumb-placeholder">📅</div>
+            <div class="item-info">
+              <div class="name">${ev.title}</div>
+              <div class="meta">${fmtDate(ev.date)}${time ? ' · ' + time : ''} · ${ev.tag}</div>
+            </div>
+            ${badge}
+            <button class="btn-danger" onclick="deleteEvent(${ev.id})">Delete</button>
+          </div>`;
+        }).join('');
+      } catch {
+        container.innerHTML = '<div class="empty-state">⚠️ Server offline.</div>';
+      }
+    }
+
+    // ── GALLERY ──
+    let pendingFiles = [];
+
+    function handleFileSelect(event) {
+      const files = Array.from(event.target.files);
+      const previewDiv = document.getElementById('preview-imgs');
+      pendingFiles = files;
+      previewDiv.innerHTML = '';
+      files.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          previewDiv.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Drag & drop
+    const dropZone = document.getElementById('drop-zone');
+    dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.style.borderColor = '#406AAF'; });
+    dropZone.addEventListener('dragleave', () => { dropZone.style.borderColor = ''; });
+    dropZone.addEventListener('drop', e => {
+      e.preventDefault();
+      dropZone.style.borderColor = '';
+      pendingFiles = Array.from(e.dataTransfer.files);
+      const previewDiv = document.getElementById('preview-imgs');
+      previewDiv.innerHTML = '';
+      pendingFiles.forEach(file => {
+        const reader = new FileReader();
+        reader.onload = ev => {
+          const img = document.createElement('img');
+          img.src = ev.target.result;
+          previewDiv.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    async function addGalleryItem() {
+      if (!pendingFiles.length) { showToast('⚠️ Please select at least one image.'); return; }
+      const btn = document.getElementById('gal-add-btn');
+      const caption = document.getElementById('gal-caption').value.trim() || 'MTC Moment';
+
+      btn.disabled = true;
+      btn.textContent = 'Uploading…';
+
+      const formData = new FormData();
+      formData.append('caption', caption);
+      pendingFiles.forEach(f => formData.append('photos', f));
+
+      try {
+        const r = await fetch(`${API}/api/gallery/upload`, { method: 'POST', body: formData });
+        if (!r.ok) throw new Error();
+        showToast(`✅ ${pendingFiles.length} photo(s) saved to public/gallery/!`);
+        document.getElementById('gal-caption').value = '';
+        document.getElementById('gal-file').value = '';
+        document.getElementById('preview-imgs').innerHTML = '';
+        pendingFiles = [];
+        await renderGallery();
+      } catch {
+        showToast('❌ Could not upload. Is the admin server running?');
+      }
+      btn.disabled = false;
+      btn.textContent = '➕ Add to Gallery';
+    }
+
+    async function deleteGalleryItem(id) {
+      if (!confirm('Delete this photo?')) return;
+      await fetch(`${API}/api/gallery/${id}`, { method: 'DELETE' });
+      showToast('🗑️ Photo deleted.');
+      await renderGallery();
+    }
+
+    async function renderGallery() {
+      const container = document.getElementById('gallery-list');
+      try {
+        const gallery = await fetch(`${API}/api/gallery`).then(r => r.json());
+        if (!gallery.length) {
+          container.innerHTML = '<div class="empty-state">No photos yet.</div>';
+          return;
+        }
+        container.innerHTML = gallery.map(item => `
+          <div class="item-row">
+            <img class="thumb" src="${API}/gallery/${item.filename}" alt="${item.caption}" onerror="this.style.display='none'" />
+            <div class="item-info">
+              <div class="name">${item.caption}</div>
+              <div class="meta">Added ${new Date(item.addedAt).toLocaleDateString()}</div>
+            </div>
+            <button class="btn-danger" onclick="deleteGalleryItem(${item.id})">Delete</button>
+          </div>`).join('');
+      } catch {
+        container.innerHTML = '<div class="empty-state">⚠️ Server offline.</div>';
+      }
+    }
+
+    // ── BOARD MEMBERS ──
+    async function addBoardMember() {
+      const btn = document.getElementById('board-add-btn');
+      const term = document.getElementById('board-term').value;
+      const name = document.getElementById('board-name').value.trim();
+      const role = document.getElementById('board-role').value.trim();
+
+      if (!term || !name || !role) { showToast('⚠️ All fields are required.'); return; }
+
+      btn.disabled = true;
+      btn.textContent = 'Saving…';
+      try {
+        const r = await fetch(`${API}/api/board`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ term, name, role })
+        });
+        if (!r.ok) throw new Error();
+        showToast('✅ Board member saved to board.json!');
+        document.getElementById('board-name').value = '';
+        document.getElementById('board-role').value = '';
+        document.getElementById('board-term').value = 'Fall 2025';
+        await renderBoardMembers();
+      } catch {
+        showToast('❌ Could not save. Is the admin server running?');
+      }
+      btn.disabled = false;
+      btn.textContent = '➕ Add Board Member';
+    }
+
+    async function deleteBoardMember(id) {
+      if (!confirm('Delete this board member?')) return;
+      await fetch(`${API}/api/board/${id}`, { method: 'DELETE' });
+      showToast('🗑️ Board member deleted.');
+      await renderBoardMembers();
+    }
+
+    async function renderBoardMembers() {
+      const container = document.getElementById('board-list');
+      try {
+        const board = await fetch(`${API}/api/board`).then(r => r.json());
+        if (!board.length) {
+          container.innerHTML = '<div class="empty-state">No board members yet.</div>';
+          return;
+        }
+        const termOrder = { 'Fall 2025': 0, 'Spring 2026': 1, 'Fall 2026': 2 };
+        const grouped = {};
+        board.forEach(m => {
+          if (!grouped[m.term]) grouped[m.term] = [];
+          grouped[m.term].push(m);
+        });
+
+        let html = '';
+        ['Fall 2025', 'Spring 2026', 'Fall 2026'].forEach(term => {
+          if (grouped[term]) {
+            const termMembers = grouped[term].sort((a, b) => (a.rank || 999) - (b.rank || 999));
+            html += `<div style="margin-bottom: 1.5rem;">`;
+            html += `<div style="font-weight: 700; color: var(--blue); font-size: 0.9rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">${term}</div>`;
+            html += termMembers.map((m, idx) => `
+              <div class="item-row" style="display: grid; grid-template-columns: auto 1fr auto; gap: 0.5rem; align-items: center;">
+                <div style="display: flex; gap: 0.25rem; flex-direction: column;">
+                  <button class="rank-btn" onclick="updateBoardRank(${m.id}, 'up')" ${idx === 0 ? 'disabled' : ''} title="Move up">▲</button>
+                  <button class="rank-btn" onclick="updateBoardRank(${m.id}, 'down')" ${idx === termMembers.length - 1 ? 'disabled' : ''} title="Move down">▼</button>
+                </div>
+                <div class="thumb-placeholder">👤</div>
+                <div class="item-info">
+                  <div class="name">${m.name}</div>
+                  <div class="meta">${m.role}</div>
+                </div>
+                <button class="btn-danger" onclick="deleteBoardMember(${m.id})">Delete</button>
+              </div>`).join('');
+            html += `</div>`;
+          }
+        });
+        container.innerHTML = html;
+      } catch {
+        container.innerHTML = '<div class="empty-state">⚠️ Server offline.</div>';
+      }
+    }
+
+    async function updateBoardRank(id, direction) {
+      try {
+        await fetch(`${API}/api/board/${id}/rank`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ direction })
+        });
+        await renderBoardMembers();
+      } catch {
+        showToast('❌ Could not update rank. Is the admin server running?');
+      }
+    }
+
+    // ── INIT ──
+    async function init() {
+      const online = await checkServer();
+      if (online) {
+        await renderEvents();
+        await renderGallery();
+        await renderBoardMembers();
+      }
+    }
+
+    // Run init if already authenticated
+    if (sessionStorage.getItem(SESSION_KEY) === '1') {
+      init();
+    }
+  </script>
+</body>
+</html>
