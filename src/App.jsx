@@ -1,503 +1,370 @@
 import { useState, useEffect, useCallback } from "react";
 
 export default function MTCCSUFSite() {
-  // ── Dynamic data from admin panel (localStorage) ──
   const [events, setEvents] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [boardMembers, setBoardMembers] = useState([]);
-  const [lightbox, setLightbox] = useState(null); // { src, caption }
-  const [selectedBoardTerm, setSelectedBoardTerm] = useState("Fall 2025");
+  const [lightbox, setLightbox] = useState(null);
+  const [selectedBoardTerm, setSelectedBoardTerm] = useState("Spring 2026");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const loadData = useCallback(() => {
-    // ── EVENTS: fetch from public/data/events.json ──
     fetch("/data/events.json")
       .then((r) => r.json())
       .then((raw) => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const upcoming = raw.filter((ev) => {
-          const d = new Date(ev.date + "T00:00:00");
-          return d >= today;
-        });
-        setEvents(upcoming);
+        setEvents(raw.filter((ev) => new Date(ev.date + "T00:00:00") >= today));
       })
       .catch(() => setEvents([]));
-
-    // ── GALLERY: fetch from public/data/gallery.json ──
-    fetch("/data/gallery.json")
-      .then((r) => r.json())
-      .then((raw) => setGallery(raw))
-      .catch(() => setGallery([]));
-
-    // ── BOARD MEMBERS: fetch from public/data/board.json ──
-    fetch("/data/board.json")
-      .then((r) => r.json())
-      .then((raw) => setBoardMembers(raw))
-      .catch(() => setBoardMembers([]));
+    fetch("/data/gallery.json").then((r) => r.json()).then(setGallery).catch(() => setGallery([]));
+    fetch("/data/board.json").then((r) => r.json()).then(setBoardMembers).catch(() => setBoardMembers([]));
   }, []);
-
 
   useEffect(() => {
     loadData();
-    const handler = () => loadData();
-    window.addEventListener("focus", handler);
-    window.addEventListener("storage", handler);
-    return () => {
-      window.removeEventListener("focus", handler);
-      window.removeEventListener("storage", handler);
-    };
+    window.addEventListener("focus", loadData);
+    window.addEventListener("storage", loadData);
+    return () => { window.removeEventListener("focus", loadData); window.removeEventListener("storage", loadData); };
   }, [loadData]);
 
-  // ── Time/Date helpers ──
-  function fmt12(timeStr) {
-    if (!timeStr) return "";
-    const [hh, mm] = timeStr.split(":");
-    const h = parseInt(hh, 10);
-    const ampm = h >= 12 ? "PM" : "AM";
-    const h12 = h % 12 || 12;
-    return `${h12}:${mm} ${ampm}`;
-  }
+  const fmt12 = (t) => { if (!t) return ""; const [hh, mm] = t.split(":"); const h = +hh; return `${h % 12 || 12}:${mm} ${h >= 12 ? "PM" : "AM"}`; };
+  const fmtDate = (s) => { if (!s) return ""; const [, m, d] = s.split("-"); return `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1]} ${+d}`; };
+  const initials = (n) => n.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+  const scrollTo = (id) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }); setMenuOpen(false); };
 
-  function formatDateDisplay(dateStr) {
-    if (!dateStr) return "";
-    const [, m, d] = dateStr.split("-");
-    const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    return `${months[parseInt(m) - 1]} ${parseInt(d)}`;
-  }
-
-  // ── Static data ──
   const navItems = [
-    { id: "home", label: "Home" },
-    { id: "about", label: "About" },
-    { id: "team", label: "Team" },
-    { id: "events", label: "Events" },
-    { id: "gallery", label: "Gallery" },
-    { id: "contact", label: "Contact" },
+    { id: "home", label: "Home" }, { id: "about", label: "About" }, { id: "team", label: "Team" },
+    { id: "events", label: "Events" }, { id: "gallery", label: "Gallery" }, { id: "contact", label: "Contact" },
   ];
-
   const aboutCards = [
-    {
-      title: "Community",
-      icon: "🤝",
-      text: "We create a welcoming space where Muslim tech students can connect, share experiences, and support each other throughout their academic and professional journeys.",
-    },
-    {
-      title: "Innovation",
-      icon: "💡",
-      text: "We encourage members to build projects, participate in hackathons, and explore emerging technologies while staying grounded in their values.",
-    },
-    {
-      title: "Education",
-      icon: "🎓",
-      text: "Through workshops, tech talks, and study sessions, we help members grow their technical skills and prepare for careers in software, AI, cybersecurity, and more.",
-    },
-    {
-      title: "Networking",
-      icon: "🌐",
-      text: "We connect students with professionals, alumni, and peers to open doors and create opportunities beyond the classroom.",
-    },
+    { title: "Community", icon: "◈", text: "A welcoming space where Muslim tech students connect, share experiences, and support each other through their academic and professional journeys." },
+    { title: "Innovation", icon: "◆", text: "We encourage members to build projects, join hackathons, and explore emerging technologies while staying grounded in their values." },
+    { title: "Education", icon: "◉", text: "Through workshops, tech talks, and study sessions, we help members grow their skills and prepare for careers in software, AI, and cybersecurity." },
+    { title: "Networking", icon: "◎", text: "We connect students with professionals, alumni, and peers to open doors and create opportunities beyond the classroom." },
   ];
-
-  const boardTerms = ["Spring 2026","Fall 2025", "Fall 2026"];
-
-  const currentTeam = boardMembers
-    .filter((m) => m.term === selectedBoardTerm)
-    .sort((a, b) => (a.rank || 999) - (b.rank || 999)) || [];
-
-  // Fallback events shown only when admin hasn't added any
+  const boardTerms = ["Spring 2026", "Fall 2025", "Fall 2026"];
+  const currentTeam = boardMembers.filter((m) => m.term === selectedBoardTerm).sort((a, b) => (a.rank || 999) - (b.rank || 999));
   const fallbackEvents = [
-    {
-      id: "f1",
-      title: "MTC General Meeting",
-      date: "2026-04-28",
-      start: "17:30",
-      end: "19:00",
-      tag: "Meeting",
-      desc: "Meet the team, learn about the semester, and connect with fellow members.",
-    },
-    {
-      id: "f2",
-      title: "Tech Networking Night",
-      date: "2026-05-10",
-      start: "18:00",
-      end: "21:00",
-      tag: "Networking",
-      desc: "Connect with Muslim professionals in tech and expand your community.",
-    },
-    {
-      id: "f3",
-      title: "Resume and LinkedIn Workshop",
-      date: "2026-05-03",
-      start: "16:00",
-      end: "18:00",
-      tag: "Workshop",
-      desc: "Polish your resume and online presence before internship season.",
-    },
+    { id: "f1", title: "MTC General Meeting", date: "2026-04-28", start: "17:30", end: "19:00", tag: "Meeting", desc: "Meet the team, learn about the semester, and connect with fellow members." },
+    { id: "f2", title: "Tech Networking Night", date: "2026-05-10", start: "18:00", end: "21:00", tag: "Networking", desc: "Connect with Muslim professionals in tech and expand your community." },
+    { id: "f3", title: "Resume and LinkedIn Workshop", date: "2026-05-03", start: "16:00", end: "18:00", tag: "Workshop", desc: "Polish your resume and online presence before internship season." },
   ];
-
-  // Fallback gallery placeholders when admin hasn't uploaded any photos
-  const galleryFallback = [
-    "Fall Kickoff",
-    "Python Workshop",
-    "Networking Night",
-    "Ramadan Iftar",
-    "Hackathon Teams",
-    "Community Meetup",
-  ];
-
+  const galleryFallback = ["Fall Kickoff", "Python Workshop", "Networking Night", "Ramadan Iftar", "Hackathon Teams", "Community Meetup"];
   const eventsToShow = events.length > 0 ? events : fallbackEvents;
 
-  const scrollToSection = (id) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
-
-  const initials = (name) =>
-    name
-      .split(" ")
-      .map((part) => part[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase();
-
   return (
-    <div className="min-h-screen bg-[#FFE8BE] text-slate-900 scroll-smooth">
+    <div style={{ minHeight: "100vh", background: "#050A14", color: "#F5F0E8", fontFamily: "Georgia, serif" }}>
       <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap');
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+          --navy: #050A14; --navy2: #0B1628; --navy3: #0F1E35;
+          --gold: #C9A84C; --gold2: #E8C96A; --gold3: #F5E098;
+          --white: #F5F0E8; --muted: #8A95A3; --border: rgba(201,168,76,0.18);
+        }
         html { scroll-behavior: smooth; }
+        .serif { font-family: 'Cormorant Garamond', Georgia, serif; }
+        .mono  { font-family: 'DM Mono', monospace; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--navy); }
+        ::-webkit-scrollbar-thumb { background: var(--gold); }
 
-        @keyframes shakeTiny {
-          0%   { transform: rotate(0deg) translateY(0); }
-          20%  { transform: rotate(-6deg) translateY(-1px); }
-          40%  { transform: rotate(6deg) translateY(0); }
-          60%  { transform: rotate(-5deg) translateY(-1px); }
-          80%  { transform: rotate(5deg) translateY(0); }
-          100% { transform: rotate(0deg) translateY(0); }
-        }
+        .section-shell { min-height: 100vh; scroll-margin-top: 72px; }
+        .section-pad { padding: 5rem 1.5rem; }
+        @media (min-width: 768px) { .section-pad { padding: 7rem 2rem; } }
+        .section-inner { max-width: 1280px; margin: 0 auto; }
+        .section-label { font-family:'DM Mono',monospace; font-size:0.65rem; letter-spacing:0.35em; text-transform:uppercase; color:var(--gold); }
+        .gold-bar { width:2.5rem; height:2px; background:var(--gold); margin-top:1.25rem; }
+        .divider { border:none; border-top:1px solid var(--border); }
 
-        .shake-letter:hover {
-          animation: shakeTiny 0.35s ease-in-out 2;
-        }
+        /* NAV */
+        .nav-desktop { display:none; align-items:center; gap:2rem; }
+        .nav-hamburger { display:flex; background:none; border:none; cursor:pointer; color:var(--gold); font-size:1.6rem; line-height:1; padding:0; }
+        @media (min-width: 768px) { .nav-desktop { display:flex; } .nav-hamburger { display:none; } }
+        .nav-link { position:relative; font-family:'DM Mono',monospace; font-size:0.7rem; letter-spacing:0.18em; text-transform:uppercase; color:var(--muted); background:none; border:none; cursor:pointer; padding:0.3rem 0; transition:color .2s; }
+        .nav-link::after { content:''; position:absolute; bottom:0; left:0; width:0; height:1px; background:var(--gold); transition:width .25s; }
+        .nav-link:hover { color:var(--gold3); }
+        .nav-link:hover::after { width:100%; }
+        .nav-admin { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:0.18em; border:1px solid var(--gold); color:var(--gold); padding:0.4rem 1rem; text-decoration:none; text-transform:uppercase; transition:background .2s, color .2s; }
+        .nav-admin:hover { background:var(--gold); color:var(--navy); }
 
-        .section-shell {
-          min-height: 100vh;
-          scroll-margin-top: 88px;
-        }
+        /* MOBILE MENU */
+        .mobile-menu { position:fixed; inset:0; background:rgba(5,10,20,0.98); z-index:200; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2.5rem; backdrop-filter:blur(16px); }
+        .mobile-nav-btn { font-family:'Cormorant Garamond',Georgia,serif; font-size:2.2rem; font-weight:600; color:var(--white); background:none; border:none; cursor:pointer; transition:color .2s; }
+        .mobile-nav-btn:hover { color:var(--gold); }
+
+        /* NOISE */
+        .noise { position:relative; }
+        .noise::after { content:''; position:absolute; inset:0; pointer-events:none; z-index:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E"); }
+
+        /* HERO */
+        .hero-inner { position:relative; z-index:1; max-width:1280px; margin:0 auto; padding:4rem 1.5rem 4rem; width:100%; }
+        .hero-giant { font-family:'Cormorant Garamond',Georgia,serif; font-size:clamp(5.5rem,20vw,18rem); font-weight:700; line-height:0.88; letter-spacing:-0.04em; background:linear-gradient(160deg,#F5E098 0%,#C9A84C 45%,#8B6914 100%); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+        .hero-grid { display:grid; gap:2rem; margin-top:2.5rem; grid-template-columns:1fr; }
+        @media (min-width: 768px) { .hero-grid { grid-template-columns:1fr 1fr; max-width:900px; } }
+        .hero-stat-grid { display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--border); }
+        .hero-stat { background:rgba(15,30,53,0.6); backdrop-filter:blur(12px); padding:1.25rem 1rem; text-align:center; }
+        .hero-btns { margin-top:1.75rem; display:flex; gap:1rem; flex-wrap:wrap; }
+        .btn-gold { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:0.2em; background:var(--gold); color:var(--navy); padding:0.75rem 1.5rem; border:none; cursor:pointer; text-transform:uppercase; font-weight:500; transition:background .2s; white-space:nowrap; }
+        .btn-gold:hover { background:var(--gold3); }
+        .btn-outline { font-family:'DM Mono',monospace; font-size:0.68rem; letter-spacing:0.2em; background:transparent; color:var(--white); padding:0.75rem 1.5rem; border:1px solid rgba(255,255,255,0.2); cursor:pointer; text-transform:uppercase; transition:border-color .2s,color .2s; white-space:nowrap; }
+        .btn-outline:hover { border-color:var(--gold); color:var(--gold); }
+
+        /* MARQUEE */
+        .marquee-track { display:flex; animation:marquee 28s linear infinite; white-space:nowrap; }
+        @keyframes marquee { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+        /* ABOUT */
+        .about-layout { display:grid; gap:2.5rem; grid-template-columns:1fr; }
+        @media (min-width: 900px) { .about-layout { grid-template-columns:260px 1fr; gap:5rem; } }
+        .about-cards { display:grid; grid-template-columns:1fr; gap:1px; background:rgba(201,168,76,0.1); margin-top:0; }
+        @media (min-width: 600px) { .about-cards { grid-template-columns:1fr 1fr; } }
+        .about-card { background:var(--navy2); padding:1.5rem; border:1px solid transparent; transition:transform .3s,border-color .3s; cursor:default; }
+        .about-card:hover { transform:translateY(-3px); border-color:var(--gold); }
+
+        /* TEAM */
+        .team-header { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:1.25rem; margin-top:0.75rem; }
+        .team-grid { display:grid; gap:1px; background:rgba(201,168,76,0.08); grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); margin-top:2rem; }
+        @media (min-width: 600px) { .team-grid { grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); } }
+        .team-card { background:var(--navy2); padding:1.5rem 1rem; text-align:center; border:1px solid transparent; transition:border-color .3s,transform .3s; }
+        .team-card:hover { border-color:var(--gold); transform:translateY(-3px); }
+        .team-avatar { width:52px; height:52px; border-radius:50%; margin:0 auto 1rem; background:linear-gradient(135deg,var(--navy3),var(--gold)); display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--navy); font-weight:700; }
+
+        /* EVENTS */
+        .event-row { display:grid; gap:0.75rem; align-items:start; padding:1.5rem 0; border-bottom:1px solid var(--border); grid-template-columns:1fr; transition:padding-left .25s; }
+        @media (min-width: 600px) { .event-row { grid-template-columns:100px 1fr; gap:2rem; } .event-row:hover { padding-left:0.5rem; } }
+        .tag { display:inline-block; font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.2em; text-transform:uppercase; color:var(--navy); background:var(--gold); padding:0.22rem 0.7rem; }
+
+        /* GALLERY */
+        .gallery-grid { display:grid; gap:1px; background:rgba(201,168,76,0.08); grid-template-columns:1fr; }
+        @media (min-width: 500px) { .gallery-grid { grid-template-columns:1fr 1fr; } }
+        @media (min-width: 900px) { .gallery-grid { grid-template-columns:1fr 1fr 1fr; } }
+        .gallery-item { position:relative; aspect-ratio:4/3; overflow:hidden; border:1px solid var(--border); cursor:pointer; transition:border-color .3s; }
+        .gallery-item:hover { border-color:var(--gold); }
+        .gallery-overlay { position:absolute; inset:0; background:linear-gradient(to top,rgba(5,10,20,.85) 0%,transparent 55%); opacity:0; transition:opacity .3s; display:flex; align-items:flex-end; padding:1.25rem; }
+        .gallery-item:hover .gallery-overlay { opacity:1; }
+
+        /* CONTACT */
+        .contact-layout { display:grid; gap:2.5rem; grid-template-columns:1fr; }
+        @media (min-width: 900px) { .contact-layout { grid-template-columns:260px 1fr; gap:5rem; } }
+        .contact-link { display:flex; align-items:center; gap:1.25rem; padding:1.25rem 0; border-bottom:1px solid var(--border); text-decoration:none; transition:padding-left .25s; }
+        .contact-link:hover { padding-left:0.5rem; }
+        .contact-icon { width:42px; height:42px; border:1px solid var(--border); flex-shrink:0; display:flex; align-items:center; justify-content:center; color:var(--gold); font-size:1.1rem; }
+        .contact-arrow { margin-left:auto; color:var(--muted); font-size:1.2rem; transition:transform .2s,color .2s; flex-shrink:0; }
+        .contact-link:hover .contact-arrow { color:var(--gold); transform:translateX(4px); }
       `}</style>
 
       {/* ── NAVBAR ── */}
-      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/30 bg-[#FFE8BE]/85 backdrop-blur-md">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
-          <button
-            onClick={() => scrollToSection("home")}
-            className="text-2xl font-black tracking-[0.25em] text-[#406AAF] transition hover:text-[#427AB5]"
-          >
-            MTC
-          </button>
-
-          <nav className="hidden items-center gap-2 md:flex">
+      <header style={{ position:"fixed", top:0, left:0, right:0, zIndex:100, borderBottom:"1px solid rgba(201,168,76,0.12)", background:"rgba(5,10,20,0.92)", backdropFilter:"blur(16px)" }}>
+        <div style={{ maxWidth:1280, margin:"0 auto", padding:"0 1.5rem", display:"flex", alignItems:"center", justifyContent:"space-between", height:72 }}>
+          <button onClick={() => scrollTo("home")} className="mono" style={{ fontSize:"0.75rem", letterSpacing:"0.35em", color:"var(--gold)", fontWeight:500, background:"none", border:"none", cursor:"pointer" }}>MTC</button>
+          <nav className="nav-desktop">
             {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="rounded-full px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-[#F7DD7D] hover:text-[#406AAF]"
-              >
-                {item.label}
-              </button>
+              <button key={item.id} onClick={() => scrollTo(item.id)} className="nav-link">{item.label}</button>
             ))}
-            <a
-              href="/admin.html"
-              className="rounded-full bg-[#406AAF] px-4 py-2 text-sm font-bold text-white transition hover:bg-[#427AB5]"
-            >
-              Admin ⚙️
-            </a>
+            <a href="/admin.html" className="nav-admin">Admin</a>
           </nav>
+          <button className="nav-hamburger" onClick={() => setMenuOpen(true)}>☰</button>
         </div>
       </header>
 
+      {/* Mobile menu */}
+      {menuOpen && (
+        <div className="mobile-menu">
+          <button onClick={() => setMenuOpen(false)} style={{ position:"absolute", top:"1.5rem", right:"1.5rem", background:"none", border:"none", cursor:"pointer", color:"var(--gold)", fontSize:"1.6rem" }}>✕</button>
+          {navItems.map((item) => (
+            <button key={item.id} onClick={() => scrollTo(item.id)} className="mobile-nav-btn">{item.label}</button>
+          ))}
+          <a href="/admin.html" className="nav-admin" style={{ marginTop:"0.5rem" }}>Admin</a>
+        </div>
+      )}
+
       <main>
         {/* ── HOME ── */}
-        <section
-          id="home"
-          className="section-shell relative flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#406AAF] via-[#427AB5] to-[#406AAF] px-6 pt-28"
-        >
-          <div className="absolute -right-16 -top-16 h-72 w-72 rounded-full border-[34px] border-[#F7DD7D]/25" />
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.18),_transparent_42%)]" />
+        <section id="home" className="section-shell noise" style={{ display:"flex", alignItems:"center", overflow:"hidden", background:"linear-gradient(155deg,#050A14 0%,#0B1628 50%,#050A14 100%)", paddingTop:72 }}>
+          <div style={{ position:"absolute", top:"8%", right:"-5%", width:"42vw", height:"42vw", maxWidth:600, maxHeight:600, borderRadius:"50%", background:"radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%)", pointerEvents:"none" }} />
+          <div style={{ position:"absolute", bottom:"10%", left:"-8%", width:"35vw", height:"35vw", maxWidth:500, maxHeight:500, borderRadius:"50%", background:"radial-gradient(circle,rgba(201,168,76,0.04) 0%,transparent 70%)", pointerEvents:"none" }} />
+          {[15,35,65,85].map(p => <div key={p} style={{ position:"absolute", top:0, bottom:0, left:`${p}%`, width:1, background:"rgba(201,168,76,0.04)", pointerEvents:"none" }} />)}
 
-          <div className="relative z-10 mx-auto flex max-w-6xl flex-col items-center text-center">
-            <div className="mb-6 rounded-full border border-[#F7DD7D]/40 bg-white/10 px-5 py-2 text-xs font-semibold uppercase tracking-[0.35em] text-[#FFE8BE]">
-              Muslim in Tech Collaborative at CSUF
+          <div className="hero-inner">
+            <div style={{ display:"flex", alignItems:"center", gap:"0.75rem", marginBottom:"2rem" }}>
+              <div style={{ width:"2rem", height:1, background:"var(--gold)", flexShrink:0 }} />
+              <span className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.28em", textTransform:"uppercase", color:"var(--gold)" }}>Muslim in Tech Collaborative @ CSUF</span>
             </div>
 
-            <h1 className="text-[5rem] font-black leading-none tracking-[-0.08em] text-white md:text-[8rem] lg:text-[10rem]">
-              <span className="shake-letter inline-block cursor-default">M </span>
-              <span className="shake-letter inline-block cursor-default">T </span>
-              <span className="shake-letter inline-block cursor-default">C </span>
-            </h1>
+            <h1 className="hero-giant">MTC</h1>
 
-            <p className="mt-5 max-w-3xl text-lg font-light uppercase tracking-[0.35em] text-[#FFE8BE] md:text-2xl">
-              Muslim in Tech Collaborative
-            </p>
-            <p className="mt-3 max-w-2xl text-base text-white/85 md:text-lg">
-              A space where faith, leadership, and technology come together at California State University, Fullerton.
-            </p>
-
-            <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
-              <button
-                onClick={() => scrollToSection("about")}
-                className="rounded-full bg-[#F7DD7D] px-7 py-3 text-sm font-bold uppercase tracking-[0.2em] text-[#406AAF] shadow-lg transition hover:-translate-y-1 hover:bg-[#FFE8BE]"
-              >
-                Learn More
-              </button>
-              <button
-                onClick={() => scrollToSection("contact")}
-                className="rounded-full border border-white/50 px-7 py-3 text-sm font-bold uppercase tracking-[0.2em] text-white transition hover:-translate-y-1 hover:bg-white/10"
-              >
-                Connect
-              </button>
-            </div>
-
-            <div className="mt-16 grid w-full max-w-4xl grid-cols-2 gap-4 md:grid-cols-4">
-              {[
-                ["50+", "Members"],
-                ["8", "Core Leaders"],
-                ["CSUF", "Campus"],
-                ["Tech & Faith", "Focus"],
-              ].map(([value, label]) => (
-                <div key={label} className="rounded-3xl border border-white/15 bg-white/10 p-5 backdrop-blur-sm">
-                  <div className="text-3xl font-black text-[#F7DD7D] md:text-4xl">{value}</div>
-                  <div className="mt-1 text-xs uppercase tracking-[0.25em] text-white/80">{label}</div>
+            <div className="hero-grid">
+              <div>
+                <p className="serif" style={{ fontSize:"clamp(1.1rem,3vw,1.4rem)", color:"var(--white)", fontWeight:300, lineHeight:1.6, fontStyle:"italic" }}>Muslim in Tech Collaborative</p>
+                <p style={{ marginTop:"0.75rem", fontSize:"0.875rem", color:"var(--muted)", lineHeight:1.8 }}>A space where faith, leadership, and technology converge at California State University, Fullerton.</p>
+                <div className="hero-btns">
+                  <button className="btn-gold" onClick={() => scrollTo("about")}>Learn More</button>
+                  <button className="btn-outline" onClick={() => scrollTo("contact")}>Connect</button>
                 </div>
-              ))}
+              </div>
+              <div className="hero-stat-grid">
+                {[["50+","Members"],["8","Core Leaders"],["CSUF","Campus"],["Tech & Faith","Focus"]].map(([val,lab]) => (
+                  <div key={lab} className="hero-stat">
+                    <div className="serif" style={{ fontSize:"clamp(1.4rem,3vw,1.8rem)", fontWeight:700, color:"var(--gold2)" }}>{val}</div>
+                    <div className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.18em", textTransform:"uppercase", color:"var(--muted)", marginTop:"0.3rem" }}>{lab}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
+          <div style={{ position:"absolute", bottom:0, left:0, right:0, height:1, background:"linear-gradient(90deg,transparent,var(--gold),transparent)" }} />
         </section>
 
-        {/* ── ABOUT ── */}
-        <section id="about" className="section-shell bg-[#FFE8BE] px-6 py-24 md:px-8">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-12 text-center">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.35em] text-[#406AAF]">About</p>
-              <h2 className="text-4xl font-black text-[#406AAF] md:text-5xl">About MTC</h2>
-              <p className="mx-auto mt-4 max-w-3xl text-base leading-8 text-slate-700 md:text-lg">
-                MTC is a student organization dedicated to building a supportive and empowering community for students pursuing careers in technology.
-              </p>
-            </div>
+        {/* ── MARQUEE ── */}
+        <div style={{ background:"var(--gold)", overflow:"hidden", padding:"0.6rem 0" }}>
+          <div className="marquee-track">
+            {Array(8).fill(["MUSLIM","IN","TECH","COLLABORATIVE","CSUF","◆"]).flat().map((word, i) => (
+              <span key={i} className="mono" style={{ fontSize:"0.6rem", fontWeight:500, letterSpacing:"0.3em", textTransform:"uppercase", color:"var(--navy)", marginRight:"2.5rem" }}>{word}</span>
+            ))}
+          </div>
+        </div>
 
-            <div className="mb-10 rounded-[2rem] bg-white/70 p-8 shadow-sm ring-1 ring-[#427AB5]/10 md:p-10">
-              <div className="grid gap-6 md:grid-cols-[10px,1fr] md:items-start">
-                <div className="rounded-full bg-[#F7DD7D]" />
-                <div>
-                  <h3 className="text-2xl font-bold text-[#406AAF]">Our Mission</h3>
-                  <p className="mt-3 max-w-4xl text-base leading-8 text-slate-700">
+        {/* ── ABOUT ── */}
+        <section id="about" className="section-shell section-pad" style={{ background:"var(--navy)" }}>
+          <div className="section-inner">
+            <div className="about-layout">
+              <div>
+                <span className="section-label">About</span>
+                <h2 className="serif" style={{ fontSize:"clamp(2rem,5vw,3.5rem)", fontWeight:700, color:"var(--white)", marginTop:"0.75rem", lineHeight:1.1 }}>About MTC</h2>
+                <div className="gold-bar" />
+              </div>
+              <div>
+                <p className="serif" style={{ fontSize:"clamp(1.05rem,2.5vw,1.3rem)", color:"var(--white)", fontWeight:300, lineHeight:1.7, fontStyle:"italic", marginBottom:"1.75rem" }}>
+                  MTC is a student organization dedicated to building a supportive and empowering community for students pursuing careers in technology.
+                </p>
+                <div style={{ padding:"1.25rem 1.5rem", border:"1px solid var(--border)", background:"var(--navy2)", marginBottom:"2rem" }}>
+                  <span className="section-label">Our Mission</span>
+                  <p style={{ marginTop:"0.65rem", color:"var(--muted)", lineHeight:1.9, fontSize:"0.875rem" }}>
                     We bridge the gap between faith identity and professional ambition through mentorship, networking, events, and collaborative projects.
                   </p>
                 </div>
-              </div>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-2">
-              {aboutCards.map((card) => (
-                <div
-                  key={card.title}
-                  className="rounded-[2rem] bg-white p-7 shadow-sm ring-1 ring-[#427AB5]/10 transition hover:-translate-y-1"
-                >
-                  <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-2xl bg-[#F7DD7D] text-2xl">
-                    {card.icon}
-                  </div>
-                  <h3 className="text-xl font-bold text-[#406AAF]">{card.title}</h3>
-                  <p className="mt-3 leading-7 text-slate-700">{card.text}</p>
+                <div className="about-cards">
+                  {aboutCards.map((card) => (
+                    <div key={card.title} className="about-card">
+                      <span style={{ fontSize:"1rem", color:"var(--gold)", display:"block", marginBottom:"0.6rem" }}>{card.icon}</span>
+                      <h3 className="serif" style={{ fontSize:"1.15rem", fontWeight:700, color:"var(--white)", marginBottom:"0.5rem" }}>{card.title}</h3>
+                      <p style={{ fontSize:"0.84rem", color:"var(--muted)", lineHeight:1.8 }}>{card.text}</p>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              </div>
             </div>
           </div>
         </section>
 
         {/* ── TEAM ── */}
-        <section id="team" className="section-shell bg-[#F7DD7D]/30 px-6 py-24 md:px-8">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-12 text-center">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.35em] text-[#406AAF]">Team</p>
-              <h2 className="text-4xl font-black text-[#406AAF] md:text-5xl">Meet Our Team</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-slate-700">
-                The students behind the vision, events, and community building at MTC.
-              </p>
-            </div>
-
-            <div className="mb-10 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <section id="team" className="section-shell section-pad" style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)" }}>
+          <div className="section-inner">
+            <span className="section-label">Team</span>
+            <div className="team-header">
               <div>
-                <h3 className="text-xl font-bold text-[#406AAF]">Board Members by Term</h3>
-                <p className="mt-2 max-w-2xl text-base leading-7 text-slate-700">
-                  Select a term to view the team members serving during that semester.
-                </p>
+                <h2 className="serif" style={{ fontSize:"clamp(2rem,5vw,3.5rem)", fontWeight:700, color:"var(--white)", lineHeight:1.1 }}>Meet Our Team</h2>
+                <div className="gold-bar" />
               </div>
-              <div className="flex items-center gap-3 rounded-3xl bg-white/90 px-4 py-3 shadow-sm ring-1 ring-[#427AB5]/10">
-                <label htmlFor="term-select" className="text-sm font-semibold text-slate-700">
-                  Term
-                </label>
-                <select
-                  id="term-select"
-                  value={selectedBoardTerm}
-                  onChange={(event) => setSelectedBoardTerm(event.target.value)}
-                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-900 outline-none transition focus:border-[#406AAF]"
-                >
-                  {boardTerms.map((term) => (
-                    <option key={term} value={term}>{term}</option>
-                  ))}
+              <div style={{ display:"flex", alignItems:"center", gap:"0.75rem", flexShrink:0 }}>
+                <span className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.18em", textTransform:"uppercase", color:"var(--muted)" }}>Term</span>
+                <select value={selectedBoardTerm} onChange={(e) => setSelectedBoardTerm(e.target.value)}
+                  style={{ background:"var(--navy3)", border:"1px solid var(--border)", color:"var(--white)", fontFamily:"'DM Mono',monospace", fontSize:"0.68rem", letterSpacing:"0.1em", padding:"0.45rem 0.9rem", outline:"none", cursor:"pointer" }}>
+                  {boardTerms.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
             </div>
 
-            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-              {currentTeam.length > 0 ? (
-                currentTeam.map((member) => (
-                  <div
-                    key={member.name}
-                    className="rounded-[2rem] bg-white p-7 text-center shadow-sm ring-1 ring-[#427AB5]/10 transition hover:-translate-y-1"
-                  >
-                    <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-full bg-[#427AB5] text-2xl font-black text-white">
-                      {initials(member.name)}
-                    </div>
-                    <h3 className="mt-5 text-xl font-bold text-slate-900">{member.name}</h3>
-                    <p className="mt-1 text-sm font-semibold uppercase tracking-[0.18em] text-[#406AAF]">{member.role}</p>
+            {currentTeam.length > 0 ? (
+              <div className="team-grid">
+                {currentTeam.map((member) => (
+                  <div key={member.name} className="team-card">
+                    <div className="team-avatar">{initials(member.name)}</div>
+                    <h3 className="serif" style={{ fontSize:"1.05rem", fontWeight:700, color:"var(--white)" }}>{member.name}</h3>
+                    <p className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.18em", textTransform:"uppercase", color:"var(--gold)", marginTop:"0.3rem" }}>{member.role}</p>
                   </div>
-                ))
-              ) : (
-                <div className="col-span-full rounded-[2rem] bg-white/70 p-12 text-center ring-1 ring-[#427AB5]/10">
-                  <div className="text-5xl mb-4">👥</div>
-                  <p className="text-lg font-bold text-[#406AAF]">No members for this term</p>
-                  <p className="mt-2 text-slate-600">Check back soon or select a different term.</p>
-                </div>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* ── EVENTS ── */}
-        <section id="events" className="section-shell bg-[#FFE8BE] px-6 py-24 md:px-8">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-12 text-center">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.35em] text-[#406AAF]">Events</p>
-              <h2 className="text-4xl font-black text-[#406AAF] md:text-5xl">What's Happening</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-slate-700">
-                Workshops, networking, and community gatherings that help our members grow.
-              </p>
-            </div>
-
-            {eventsToShow.length === 0 ? (
-              <div className="rounded-[2rem] bg-white/70 p-12 text-center ring-1 ring-[#427AB5]/10">
-                <div className="text-5xl mb-4">📅</div>
-                <p className="text-xl font-bold text-[#406AAF]">No Upcoming Events</p>
-                <p className="mt-2 text-slate-600">Check back soon — new events are on the way!</p>
+                ))}
               </div>
             ) : (
-              <div className="space-y-6">
-                {eventsToShow.map((event) => {
-                  const timeStr =
-                    event.start || event.end
-                      ? fmt12(event.start) + (event.end ? " – " + fmt12(event.end) : "")
-                      : event.time || "";
-                  return (
-                    <div
-                      key={event.id}
-                      className="grid gap-5 rounded-[2rem] bg-white p-6 shadow-sm ring-1 ring-[#427AB5]/10 md:grid-cols-[130px,1fr] md:items-start transition hover:-translate-y-1"
-                    >
-                      <div className="rounded-2xl bg-[#427AB5] p-4 text-center text-white">
-                        <div className="text-sm font-semibold uppercase tracking-[0.25em]">
-                          {formatDateDisplay(event.date)}
-                        </div>
-                        {timeStr && (
-                          <div className="mt-2 text-xs uppercase tracking-[0.2em] text-[#FFE8BE]">{timeStr}</div>
-                        )}
-                      </div>
-                      <div>
-                        <div className="inline-block rounded-full bg-[#F7DD7D] px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-[#406AAF]">
-                          {event.tag}
-                        </div>
-                        <h3 className="mt-3 text-2xl font-bold text-slate-900">{event.title}</h3>
-                        <p className="mt-3 leading-7 text-slate-700">{event.desc}</p>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div style={{ marginTop:"2rem", padding:"3rem 1rem", border:"1px solid var(--border)", textAlign:"center" }}>
+                <p className="serif" style={{ fontSize:"1.3rem", color:"var(--muted)", fontStyle:"italic" }}>No members for this term.</p>
+                <p className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.2em", color:"var(--gold)", marginTop:"0.75rem", textTransform:"uppercase" }}>Check back soon</p>
               </div>
             )}
           </div>
         </section>
 
+        {/* ── EVENTS ── */}
+        <section id="events" className="section-shell section-pad" style={{ background:"var(--navy)", borderTop:"1px solid var(--border)" }}>
+          <div className="section-inner">
+            <span className="section-label">Events</span>
+            <h2 className="serif" style={{ fontSize:"clamp(2rem,5vw,3.5rem)", fontWeight:700, color:"var(--white)", lineHeight:1.1, marginTop:"0.75rem" }}>What's Happening</h2>
+            <div className="gold-bar" style={{ marginBottom:"2.5rem" }} />
+            <hr className="divider" />
+
+            {eventsToShow.length === 0 ? (
+              <div style={{ padding:"3rem 1rem", textAlign:"center" }}>
+                <p className="serif" style={{ fontSize:"1.3rem", color:"var(--muted)", fontStyle:"italic" }}>No upcoming events.</p>
+              </div>
+            ) : eventsToShow.map((ev) => {
+              const timeStr = ev.start || ev.end ? fmt12(ev.start) + (ev.end ? " – " + fmt12(ev.end) : "") : ev.time || "";
+              return (
+                <div key={ev.id} className="event-row">
+                  <div>
+                    <div className="mono" style={{ fontSize:"0.95rem", fontWeight:500, color:"var(--gold)" }}>{fmtDate(ev.date)}</div>
+                    {timeStr && <div className="mono" style={{ fontSize:"0.58rem", letterSpacing:"0.15em", color:"var(--muted)", marginTop:"0.2rem", textTransform:"uppercase" }}>{timeStr}</div>}
+                  </div>
+                  <div>
+                    <span className="tag">{ev.tag}</span>
+                    <h3 className="serif" style={{ fontSize:"clamp(1.2rem,3vw,1.55rem)", fontWeight:700, color:"var(--white)", marginTop:"0.55rem", lineHeight:1.2 }}>{ev.title}</h3>
+                    <p style={{ marginTop:"0.45rem", fontSize:"0.875rem", color:"var(--muted)", lineHeight:1.8 }}>{ev.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
         {/* ── LIGHTBOX ── */}
         {lightbox && (
-          <div
-            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/80 backdrop-blur-sm"
-            onClick={() => setLightbox(null)}
-          >
-            <div
-              className="relative max-w-3xl w-full mx-4"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                onClick={() => setLightbox(null)}
-                className="absolute -top-10 right-0 text-white text-3xl font-black hover:text-[#F7DD7D] transition"
-              >
-                ✕
-              </button>
-              <img
-                src={lightbox.src}
-                alt={lightbox.caption}
-                className="w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl"
-              />
-              {lightbox.caption && (
-                <p className="mt-3 text-center text-white font-semibold text-lg">{lightbox.caption}</p>
-              )}
+          <div onClick={() => setLightbox(null)} style={{ position:"fixed", inset:0, zIndex:300, background:"rgba(5,10,20,0.95)", backdropFilter:"blur(12px)", display:"flex", alignItems:"center", justifyContent:"center", padding:"1.5rem" }}>
+            <div onClick={(e) => e.stopPropagation()} style={{ position:"relative", maxWidth:900, width:"100%" }}>
+              <button onClick={() => setLightbox(null)} style={{ position:"absolute", top:"-3rem", right:0, background:"none", border:"none", cursor:"pointer", color:"var(--gold)", fontSize:"1.1rem", fontFamily:"'DM Mono',monospace" }}>✕ Close</button>
+              <img src={lightbox.src} alt={lightbox.caption} style={{ width:"100%", maxHeight:"80vh", objectFit:"contain" }} />
+              {lightbox.caption && <p className="serif" style={{ textAlign:"center", marginTop:"1rem", color:"var(--white)", fontStyle:"italic", fontSize:"1.05rem" }}>{lightbox.caption}</p>}
             </div>
           </div>
         )}
 
         {/* ── GALLERY ── */}
-        <section id="gallery" className="section-shell bg-[#F7DD7D]/30 px-6 py-24 md:px-8">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-12 text-center">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.35em] text-[#406AAF]">Gallery</p>
-              <h2 className="text-4xl font-black text-[#406AAF] md:text-5xl">Community Moments</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-slate-700">
-                A visual snapshot of events, projects, and memories from the MTC community.
-              </p>
-            </div>
+        <section id="gallery" className="section-shell section-pad" style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)" }}>
+          <div className="section-inner">
+            <span className="section-label">Gallery</span>
+            <h2 className="serif" style={{ fontSize:"clamp(2rem,5vw,3.5rem)", fontWeight:700, color:"var(--white)", lineHeight:1.1, marginTop:"0.75rem" }}>Community Moments</h2>
+            <div className="gold-bar" style={{ marginBottom:"2.5rem" }} />
 
             {gallery.length > 0 ? (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="gallery-grid">
                 {gallery.map((item) => (
-                  <div
-                    key={item.id}
-                    className="group relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-white p-4 shadow-sm ring-1 ring-[#427AB5]/10 cursor-pointer transition hover:-translate-y-1 hover:shadow-lg"
-                    onClick={() => setLightbox({ src: item.src, caption: item.caption })}
-                  >
-                    <img
-                      src={item.src}
-                      alt={item.caption}
-                      className="h-full w-full object-cover rounded-[1.5rem]"
-                    />
-                    <div className="absolute inset-4 flex items-end rounded-[1.5rem] bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition">
-                      <div className="p-4">
-                        <p className="text-white font-bold text-lg leading-tight">{item.caption}</p>
-                      </div>
+                  <div key={item.id} className="gallery-item" onClick={() => setLightbox({ src:item.src, caption:item.caption })}>
+                    <img src={item.src} alt={item.caption} style={{ width:"100%", height:"100%", objectFit:"cover", transition:"transform .4s" }}
+                      onMouseEnter={(e) => e.currentTarget.style.transform="scale(1.04)"}
+                      onMouseLeave={(e) => e.currentTarget.style.transform="scale(1)"} />
+                    <div className="gallery-overlay">
+                      <p className="serif" style={{ color:"var(--white)", fontWeight:600, fontSize:"1rem" }}>{item.caption}</p>
                     </div>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {galleryFallback.map((item, index) => (
-                  <div
-                    key={item}
-                    className="group relative aspect-[4/3] overflow-hidden rounded-[2rem] bg-white p-4 shadow-sm ring-1 ring-[#427AB5]/10"
-                  >
-                    <div className="flex h-full items-center justify-center rounded-[1.5rem] bg-gradient-to-br from-[#427AB5] via-[#406AAF] to-[#F7DD7D] p-6 text-center">
-                      <div>
-                        <div className="text-5xl">📸</div>
-                        <div className="mt-4 text-lg font-bold text-white">{item}</div>
-                        <div className="mt-2 text-sm text-[#FFE8BE]">MTC memory #{index + 1}</div>
-                      </div>
-                    </div>
+              <div className="gallery-grid">
+                {galleryFallback.map((item, i) => (
+                  <div key={item} style={{ aspectRatio:"4/3", background:"var(--navy3)", display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:"0.75rem", padding:"1rem" }}>
+                    <div style={{ width:"2rem", height:1, background:"var(--gold)" }} />
+                    <p className="serif" style={{ fontSize:"1rem", color:"var(--white)", fontStyle:"italic", textAlign:"center" }}>{item}</p>
+                    <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.2em", color:"var(--gold)", textTransform:"uppercase" }}>#{String(i+1).padStart(2,"0")}</span>
                   </div>
                 ))}
               </div>
@@ -506,56 +373,44 @@ export default function MTCCSUFSite() {
         </section>
 
         {/* ── CONTACT ── */}
-        <section id="contact" className="section-shell bg-[#FFE8BE] px-6 py-24 md:px-8">
-          <div className="mx-auto max-w-6xl">
-            <div className="mb-12 text-center">
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.35em] text-[#406AAF]">Contact</p>
-              <h2 className="text-4xl font-black text-[#406AAF] md:text-5xl">Connect With Us</h2>
-              <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-slate-700">
-                Reach out for collaborations, events, or to learn more about joining the MTC community.
-              </p>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-[1fr,1.1fr]">
-              <div className="rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-[#427AB5]/10">
-                <h3 className="text-2xl font-bold text-[#406AAF]">Get in Touch</h3>
-                <p className="mt-4 leading-7 text-slate-700">
-                  Follow our socials and stay updated on opportunities, events, and announcements.
+        <section id="contact" className="section-shell section-pad" style={{ background:"var(--navy)", borderTop:"1px solid var(--border)" }}>
+          <div className="section-inner">
+            <div className="contact-layout">
+              <div>
+                <span className="section-label">Contact</span>
+                <h2 className="serif" style={{ fontSize:"clamp(2rem,5vw,3.5rem)", fontWeight:700, color:"var(--white)", marginTop:"0.75rem", lineHeight:1.1 }}>Connect With Us</h2>
+                <div className="gold-bar" />
+                <p style={{ marginTop:"1.25rem", fontSize:"0.875rem", color:"var(--muted)", lineHeight:1.9 }}>
+                  Reach out for collaborations, events, or to learn more about joining the MTC community.
                 </p>
-
-                <div className="mt-8 space-y-4">
-                  <a
-                    href="#"
-                    className="flex items-center gap-4 rounded-2xl border border-[#427AB5]/10 bg-[#FFE8BE]/50 p-4 transition hover:translate-x-1"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7DD7D] text-2xl">📸</div>
-                    <div>
-                      <div className="font-bold text-slate-900">Instagram</div>
-                      <div className="text-sm text-slate-600">@mtccsuf</div>
-                    </div>
-                  </a>
-
-                  <a
-                    href="#"
-                    className="flex items-center gap-4 rounded-2xl border border-[#427AB5]/10 bg-[#FFE8BE]/50 p-4 transition hover:translate-x-1"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#427AB5] text-2xl text-white">💼</div>
-                    <div>
-                      <div className="font-bold text-slate-900">LinkedIn</div>
-                      <div className="text-sm text-slate-600">Muslim Tech Collaborative @ CSUF</div>
-                    </div>
-                  </a>
-                </div>
               </div>
-
-              
+              <div>
+                <hr className="divider" />
+                {[
+                  { icon:"◈", label:"Instagram", value:"@mtccsuf", href:"https://www.instagram.com/mtccsuf" },
+                  { icon:"◆", label:"LinkedIn", value:"Muslim Tech Collaborative @ CSUF", href:"#" },
+                  { icon:"◎", label:"Email", value:"csufmtc@gmail.com", href:"mailto:csufmtc@gmail.com" },
+                ].map(({ icon, label, value, href }) => (
+                  <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="contact-link">
+                    <div className="contact-icon">{icon}</div>
+                    <div style={{ minWidth:0, flex:1 }}>
+                      <div className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"var(--muted)" }}>{label}</div>
+                      <div className="serif" style={{ fontSize:"clamp(0.95rem,2vw,1.15rem)", color:"var(--white)", marginTop:"0.2rem", wordBreak:"break-word" }}>{value}</div>
+                    </div>
+                    <span className="contact-arrow">→</span>
+                  </a>
+                ))}
+              </div>
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="border-t border-[#427AB5]/15 bg-[#406AAF] px-6 py-5 text-center text-sm font-medium tracking-[0.18em] text-[#FFE8BE] uppercase">
-        Copyright @MTC CSUF
+      {/* ── FOOTER ── */}
+      <footer style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)", padding:"1.5rem", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:"0.75rem" }}>
+        <span className="mono" style={{ fontSize:"0.65rem", letterSpacing:"0.25em", textTransform:"uppercase", color:"var(--gold)" }}>MTC</span>
+        <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"var(--muted)" }}>© Muslim Tech Collaborative @ CSUF</span>
+        <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"var(--muted)" }}>Fullerton, CA</span>
       </footer>
     </div>
   );
