@@ -190,14 +190,14 @@ export default function MTCCSUFSite() {
           <div className="hero-inner">
             <div style={{ display:"flex", alignItems:"center", gap:"0.75rem", marginBottom:"2rem" }}>
               <div style={{ width:"2rem", height:1, background:"var(--gold)", flexShrink:0 }} />
-              <span className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.28em", textTransform:"uppercase", color:"var(--gold)" }}>Muslim in Tech Collaborative @ CSUF</span>
+              <span className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.28em", textTransform:"uppercase", color:"var(--gold)" }}>Muslim Tech Collaborative @ CSUF</span>
             </div>
 
             <h1 className="hero-giant">MTC</h1>
 
             <div className="hero-grid">
               <div>
-                <p className="serif" style={{ fontSize:"clamp(1.1rem,3vw,1.4rem)", color:"var(--white)", fontWeight:300, lineHeight:1.6, fontStyle:"italic" }}>Muslim in Tech Collaborative</p>
+                <p className="serif" style={{ fontSize:"clamp(1.1rem,3vw,1.4rem)", color:"var(--white)", fontWeight:300, lineHeight:1.6, fontStyle:"italic" }}>Muslim Tech Collaborative</p>
                 <p style={{ marginTop:"0.75rem", fontSize:"0.875rem", color:"var(--muted)", lineHeight:1.8 }}>A space where faith, leadership, and technology converge at California State University, Fullerton.</p>
                 <div className="hero-btns">
                   <button className="btn-gold" onClick={() => scrollTo("about")}>Learn More</button>
@@ -220,7 +220,7 @@ export default function MTCCSUFSite() {
         {/* ── MARQUEE ── */}
         <div style={{ background:"var(--gold)", overflow:"hidden", padding:"0.6rem 0" }}>
           <div className="marquee-track">
-            {Array(8).fill(["MUSLIM","IN","TECH","COLLABORATIVE","CSUF","◆"]).flat().map((word, i) => (
+            {Array(8).fill(["MUSLIM","TECH","COLLABORATIVE","CSUF","◆"]).flat().map((word, i) => (
               <span key={i} className="mono" style={{ fontSize:"0.6rem", fontWeight:500, letterSpacing:"0.3em", textTransform:"uppercase", color:"var(--navy)", marginRight:"2.5rem" }}>{word}</span>
             ))}
           </div>
@@ -388,7 +388,7 @@ export default function MTCCSUFSite() {
                 <hr className="divider" />
                 {[
                   { icon:"◈", label:"Instagram", value:"@mtccsuf", href:"https://www.instagram.com/mtccsuf" },
-                  { icon:"◆", label:"LinkedIn", value:"Muslim Tech Collaborative @ CSUF", href:"#" },
+                  { icon:"◆", label:"LinkedIn", value:"Muslim Tech Collaborative @ CSUF", href:"https://www.linkedin.com/company/muslim-tech-collaborative-at-csuf/posts/?feedView=all" },
                   { icon:"◎", label:"Email", value:"csufmtc@gmail.com", href:"mailto:csufmtc@gmail.com" },
                 ].map(({ icon, label, value, href }) => (
                   <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="contact-link">
