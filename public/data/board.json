@@ -1,19 +1,5 @@
 [
   {
-    "id": 7,
-    "term": "Spring 2026",
-    "name": "Shifa Tantu",
-    "role": "Community Manager",
-    "rank": 3
-  },
-  {
-    "id": 5,
-    "term": "Spring 2026",
-    "name": "Kamal",
-    "role": "Entrepreneurship Coordinator",
-    "rank": 2
-  },
-  {
     "id": 1777506421749,
     "term": "Spring 2026",
     "name": "Ahad Ahmed",
@@ -21,38 +7,59 @@
     "rank": 1
   },
   {
-    "id": 6,
+    "id": 1777599231246,
     "term": "Spring 2026",
-    "name": "Talha",
-    "role": "Project Coordinator",
+    "name": "Medina Malik",
+    "role": "Vice president",
+    "rank": 2
+  },
+  {
+    "id": 7,
+    "term": "Spring 2026",
+    "name": "Shifa Tantu",
+    "role": "Community Manager",
     "rank": 4
+  },
+  {
+    "id": 1778292362894,
+    "term": "Spring 2026",
+    "name": "Kamal Shmara",
+    "role": "VP of Entrepreneurship",
+    "rank": 6
   },
   {
     "id": 8,
     "term": "Spring 2026",
     "name": "Zahraa Kachroo",
     "role": "Social Media Lead",
-    "rank": 5
+    "rank": 7
   },
   {
     "id": 1777506487969,
     "term": "Spring 2026",
     "name": "Ruman Saiyed",
     "role": "Treasurer",
-    "rank": 6
+    "rank": 9
   },
   {
     "id": 1777506503890,
     "term": "Spring 2026",
     "name": "Haroon",
     "role": "Treasurer",
-    "rank": 7
+    "rank": 10
   },
   {
     "id": 1777506519061,
     "term": "Spring 2026",
     "name": "Ali Zaidi",
     "role": "Treasurer",
+    "rank": 11
+  },
+  {
+    "id": 1778292437625,
+    "term": "Spring 2026",
+    "name": "Talha Raheem",
+    "role": "VP of Projects",
     "rank": 8
   },
   {
@@ -67,7 +74,7 @@
     "term": "Fall 2025",
     "name": "Yaweer Mahmood",
     "role": "Treasurer",
-    "rank": 2
+    "rank": 4
   },
   {
     "id": 2,
@@ -81,7 +88,7 @@
     "term": "Fall 2025",
     "name": "Ahmed",
     "role": "Vice President",
-    "rank": 4
+    "rank": 2
   },
   {
     "id": 1777506345232,

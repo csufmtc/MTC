@@ -98,7 +98,7 @@ export default function MTCCSUFSite() {
     },
   ];
 
-  const boardTerms = ["Fall 2025", "Spring 2026", "Fall 2026"];
+  const boardTerms = ["Spring 2026","Fall 2025", "Fall 2026"];
 
   const currentTeam = boardMembers
     .filter((m) => m.term === selectedBoardTerm)
@@ -531,7 +531,7 @@ export default function MTCCSUFSite() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#F7DD7D] text-2xl">📸</div>
                     <div>
                       <div className="font-bold text-slate-900">Instagram</div>
-                      <div className="text-sm text-slate-600">@mtc_csuf</div>
+                      <div className="text-sm text-slate-600">@mtccsuf</div>
                     </div>
                   </a>
 
@@ -542,7 +542,7 @@ export default function MTCCSUFSite() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#427AB5] text-2xl text-white">💼</div>
                     <div>
                       <div className="font-bold text-slate-900">LinkedIn</div>
-                      <div className="text-sm text-slate-600">Muslim in Tech Collaborative - CSUF</div>
+                      <div className="text-sm text-slate-600">Muslim Tech Collaborative @ CSUF</div>
                     </div>
                   </a>
                 </div>
@@ -555,7 +555,7 @@ export default function MTCCSUFSite() {
       </main>
 
       <footer className="border-t border-[#427AB5]/15 bg-[#406AAF] px-6 py-5 text-center text-sm font-medium tracking-[0.18em] text-[#FFE8BE] uppercase">
-        Copyright MTC CSUF
+        Copyright @MTC CSUF
       </footer>
     </div>
   );
