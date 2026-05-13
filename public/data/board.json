@@ -1,5 +1,12 @@
 [
   {
+    "id": 1778706483765,
+    "term": "Spring 2026",
+    "name": "Ahad Ahmad",
+    "role": "President",
+    "rank": 2
+  },
+  {
     "id": 1777599231246,
     "term": "Spring 2026",
     "name": "Medina Malik",
@@ -42,67 +49,60 @@
     "rank": 13
   },
   {
-    "id": 1777506487969,
-    "term": "Spring 2026",
-    "name": "Ruman Saiyed",
-    "role": "Treasurer",
-    "rank": 14
-  },
-  {
     "id": 1778355253964,
     "term": "Spring 2026",
     "name": "Mohammed Haroon",
     "role": "Treasurer",
-    "rank": 15
+    "rank": 16
   },
   {
     "id": 1777506519061,
     "term": "Spring 2026",
     "name": "Ali Zaidi",
     "role": "Treasurer",
-    "rank": 16
+    "rank": 17
   },
   {
-    "id": 1778706483765,
+    "id": 1778706863992,
     "term": "Spring 2026",
-    "name": "Ahad Ahmad",
-    "role": "President",
-    "rank": 2
-  },
-  {
-    "id": 1778355433799,
-    "term": "Fall 2026",
     "name": "Ruman Saiyed",
-    "role": "President",
-    "rank": 1
+    "role": "Treasurer X Webmaster",
+    "rank": 15
   },
   {
     "id": 1778355455227,
     "term": "Fall 2026",
     "name": "Medina Malik",
     "role": "Vice President",
-    "rank": 2
+    "rank": 3
   },
   {
     "id": 1778355505362,
     "term": "Fall 2026",
     "name": "Shifa Tantu",
     "role": "VP of Community",
-    "rank": 3
+    "rank": 4
   },
   {
     "id": 1778355469760,
     "term": "Fall 2026",
     "name": "Mohammed Haroon",
     "role": "Treasurer",
-    "rank": 4
+    "rank": 5
   },
   {
     "id": 1778355482061,
     "term": "Fall 2026",
     "name": "Ali Zaidi",
     "role": "Treasurer",
-    "rank": 5
+    "rank": 6
+  },
+  {
+    "id": 1778706842962,
+    "term": "Fall 2026",
+    "name": "Ruman Saiyed",
+    "role": "President X Webmaster",
+    "rank": 2
   },
   {
     "id": 1778706014865,
