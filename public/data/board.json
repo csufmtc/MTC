@@ -1,73 +1,73 @@
 [
   {
-    "id": 1777506421749,
-    "term": "Spring 2026",
-    "name": "Ahad Ahmed",
-    "role": "President",
-    "rank": 1
-  },
-  {
     "id": 1777599231246,
     "term": "Spring 2026",
     "name": "Medina Malik",
     "role": "Vice president",
-    "rank": 2
+    "rank": 4
   },
   {
     "id": 7,
     "term": "Spring 2026",
     "name": "Shifa Tantu",
     "role": "Community Manager",
-    "rank": 4
+    "rank": 8
   },
   {
     "id": 1778292437625,
     "term": "Spring 2026",
     "name": "Talha Raheem",
     "role": "VP of Projects",
-    "rank": 8
+    "rank": 9
   },
   {
     "id": 1778355202266,
     "term": "Spring 2026",
     "name": "Zaraa Kachroo",
     "role": "VP of Marketing",
-    "rank": 9
+    "rank": 10
   },
   {
     "id": 1778355315523,
     "term": "Spring 2026",
     "name": "Zunaira Rahat",
     "role": "Head of Entrepreneurship",
-    "rank": 10
+    "rank": 12
   },
   {
     "id": 1778355361896,
     "term": "Spring 2026",
     "name": "Kamal Shmara",
     "role": "Head of Professional Development",
-    "rank": 12
+    "rank": 13
   },
   {
     "id": 1777506487969,
     "term": "Spring 2026",
     "name": "Ruman Saiyed",
     "role": "Treasurer",
-    "rank": 13
+    "rank": 14
   },
   {
     "id": 1778355253964,
     "term": "Spring 2026",
     "name": "Mohammed Haroon",
     "role": "Treasurer",
-    "rank": 14
+    "rank": 15
   },
   {
     "id": 1777506519061,
     "term": "Spring 2026",
     "name": "Ali Zaidi",
     "role": "Treasurer",
-    "rank": 15
+    "rank": 16
+  },
+  {
+    "id": 1778706483765,
+    "term": "Spring 2026",
+    "name": "Ahad Ahmad",
+    "role": "President",
+    "rank": 2
   },
   {
     "id": 1778355433799,
@@ -84,6 +84,13 @@
     "rank": 2
   },
   {
+    "id": 1778355505362,
+    "term": "Fall 2026",
+    "name": "Shifa Tantu",
+    "role": "VP of Community",
+    "rank": 3
+  },
+  {
     "id": 1778355469760,
     "term": "Fall 2026",
     "name": "Mohammed Haroon",
@@ -98,31 +105,66 @@
     "rank": 5
   },
   {
-    "id": 1778355505362,
-    "term": "Fall 2026",
+    "id": 1778706014865,
+    "term": "Fall 2025",
+    "name": "Ahad Ahmad",
+    "role": "President",
+    "rank": 3
+  },
+  {
+    "id": 1778706084444,
+    "term": "Fall 2025",
+    "name": "Ahmad Zaidan",
+    "role": "Vide President",
+    "rank": 5
+  },
+  {
+    "id": 1778706110341,
+    "term": "Fall 2025",
     "name": "Shifa Tantu",
     "role": "VP of Community",
-    "rank": 3
+    "rank": 6
   },
   {
-    "id": 1777506403264,
+    "id": 1778706125360,
     "term": "Fall 2025",
-    "name": "Ahad Ahmed",
-    "role": "President",
-    "rank": 1
+    "name": "Zaara Kachroo",
+    "role": "VP of Marketing",
+    "rank": 7
   },
   {
-    "id": 2,
+    "id": 1778706141765,
     "term": "Fall 2025",
-    "name": "Madina Malik",
-    "role": "Vice President",
-    "rank": 3
+    "name": "Talhah Raheem",
+    "role": "VP of Projects",
+    "rank": 8
+  },
+  {
+    "id": 1778706177842,
+    "term": "Fall 2025",
+    "name": "Zunaira Rahat",
+    "role": "Head of Entrepreneureship",
+    "rank": 9
+  },
+  {
+    "id": 1778706422653,
+    "term": "Fall 2025",
+    "name": "Kamal Shmara",
+    "role": "Head of Professional Development",
+    "rank": 10
+  },
+  {
+    "id": 1778706436984,
+    "term": "Fall 2025",
+    "name": "Medina Malik",
+    "role": "Finance Chair",
+    "rank": 11
   },
   {
     "id": 1777506282222,
     "term": "Fall 2025",
     "name": "Yaweer Mahmood",
     "role": "Treasurer",
-    "rank": 4
+    "rank": 12
   }
 ]

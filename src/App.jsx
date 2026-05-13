@@ -197,7 +197,7 @@ export default function MTCCSUFSite() {
 
             <div className="hero-grid">
               <div>
-                <p className="serif" style={{ fontSize:"clamp(1.1rem,3vw,1.4rem)", color:"var(--white)", fontWeight:300, lineHeight:1.6, fontStyle:"italic" }}>Muslim Tech Collaborative</p>
+                <p className="serif" style={{ fontSize:"clamp(1.1rem,3vw,1.4rem)", color:"var(--white)", fontWeight:300, lineHeight:1.6, fontStyle:"italic" }}>Muslim Tech Collaborative @ California State University, Fullerton</p>
                 <p style={{ marginTop:"0.75rem", fontSize:"0.875rem", color:"var(--muted)", lineHeight:1.8 }}>A space where faith, leadership, and technology converge at California State University, Fullerton.</p>
                 <div className="hero-btns">
                   <button className="btn-gold" onClick={() => scrollTo("about")}>Learn More</button>
