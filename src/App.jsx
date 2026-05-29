@@ -193,7 +193,12 @@ export default function MTCCSUFSite() {
               <span className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.28em", textTransform:"uppercase", color:"var(--gold)" }}>Muslim Tech Collaborative @ CSUF</span>
             </div>
 
-            <h1 className="hero-giant">MTC</h1>
+            <h1 className="hero-giant">
+              MTC
+              <span style={{ position:"absolute", width:1, height:1, padding:0, margin:-1, overflow:"hidden", clip:"rect(0,0,0,0)", whiteSpace:"nowrap", border:0 }}>
+                {" "}— Muslim Tech Collaborative at California State University, Fullerton (CSUF)
+              </span>
+            </h1>
 
             <div className="hero-grid">
               <div>
