@@ -5,7 +5,7 @@ export default function MTCCSUFSite() {
   const [gallery, setGallery] = useState([]);
   const [boardMembers, setBoardMembers] = useState([]);
   const [lightbox, setLightbox] = useState(null);
-  const [selectedBoardTerm, setSelectedBoardTerm] = useState("Spring 2026");
+  const [selectedBoardTerm, setSelectedBoardTerm] = useState("Fall 2026");
   const [menuOpen, setMenuOpen] = useState(false);
 
   const loadData = useCallback(() => {
