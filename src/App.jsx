@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
+import GraduatesPage from "./GraduatesPage.jsx";
 
 export default function MTCCSUFSite() {
+  const [route, setRoute] = useState(() => window.location.hash);
   const [events, setEvents] = useState([]);
   const [gallery, setGallery] = useState([]);
   const [boardMembers, setBoardMembers] = useState([]);
@@ -27,6 +29,14 @@ export default function MTCCSUFSite() {
     window.addEventListener("storage", loadData);
     return () => { window.removeEventListener("focus", loadData); window.removeEventListener("storage", loadData); };
   }, [loadData]);
+
+  useEffect(() => {
+    const onHash = () => setRoute(window.location.hash);
+    window.addEventListener("hashchange", onHash);
+    return () => window.removeEventListener("hashchange", onHash);
+  }, []);
+
+  if (route === "#/graduates") return <GraduatesPage />;
 
   const fmt12 = (t) => { if (!t) return ""; const [hh, mm] = t.split(":"); const h = +hh; return `${h % 12 || 12}:${mm} ${h >= 12 ? "PM" : "AM"}`; };
   const fmtDate = (s) => { if (!s) return ""; const [, m, d] = s.split("-"); return `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1]} ${+d}`; };
@@ -298,6 +308,13 @@ export default function MTCCSUFSite() {
                 <p className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.2em", color:"var(--gold)", marginTop:"0.75rem", textTransform:"uppercase" }}>Check back soon</p>
               </div>
             )}
+
+            {/* Graduates page link */}
+            <div style={{ marginTop:"2.5rem", textAlign:"center" }}>
+              <a href="#/graduates" className="btn-gold" style={{ display:"inline-block", textDecoration:"none" }}>
+                Celebrating Our 2026 Graduates →
+              </a>
+            </div>
           </div>
         </section>
 
