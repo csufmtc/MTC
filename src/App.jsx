@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 import GraduatesPage from "./GraduatesPage.jsx";
+import PhotoUpload from "./PhotoUpload.jsx";
 
 export default function MTCCSUFSite() {
   const [route, setRoute] = useState(() => window.location.hash);
@@ -37,6 +38,7 @@ export default function MTCCSUFSite() {
   }, []);
 
   if (route === "#/graduates") return <GraduatesPage />;
+  if (route === "#/upload") return <PhotoUpload />;
 
   const fmt12 = (t) => { if (!t) return ""; const [hh, mm] = t.split(":"); const h = +hh; return `${h % 12 || 12}:${mm} ${h >= 12 ? "PM" : "AM"}`; };
   const fmtDate = (s) => { if (!s) return ""; const [, m, d] = s.split("-"); return `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1]} ${+d}`; };
