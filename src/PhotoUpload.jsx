@@ -9,6 +9,7 @@ export default function PhotoUpload() {
   const [isDragging, setIsDragging] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [toast, setToast] = useState(null);
+  const [imageSrc, setImageSrc] = useState(null);
 
   const cropperRef = useRef(null);
   const imgRef = useRef(null);
@@ -23,11 +24,50 @@ export default function PhotoUpload() {
     Free: NaN,
   };
 
+  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (cropperRef.current) cropperRef.current.destroy();
     };
   }, []);
+
+  // Initialize Cropper AFTER React has rendered the <img> element into the DOM
+  useEffect(() => {
+    if (stage !== "crop" || !imageSrc || !imgRef.current) return;
+
+    if (!window.Cropper) {
+      showToast("⚠️ Cropper failed to load. Please refresh and try again.");
+      return;
+    }
+
+    if (cropperRef.current) {
+      cropperRef.current.destroy();
+      cropperRef.current = null;
+    }
+
+    const timer = setTimeout(() => {
+      cropperRef.current = new window.Cropper(imgRef.current, {
+        aspectRatio: 1,
+        viewMode: 1,
+        dragMode: "move",
+        autoCropArea: 0.9,
+        background: false,
+        responsive: true,
+        zoom(e) {
+          if (!zoomSliderRef.current) return;
+          let v =
+            parseFloat(zoomSliderRef.current.value) +
+            (e.detail.ratio - e.detail.oldRatio);
+          zoomSliderRef.current.value = Math.max(-0.5, Math.min(1.5, v));
+        },
+      });
+      if (zoomSliderRef.current) zoomSliderRef.current.value = 0;
+      setAspectLabel("Square");
+    }, 50);
+
+    return () => clearTimeout(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stage, imageSrc]);
 
   function showToast(msg, duration = 3200) {
     setToast(msg);
@@ -45,33 +85,10 @@ export default function PhotoUpload() {
         cropperRef.current.destroy();
         cropperRef.current = null;
       }
-      imgRef.current.src = ev.target.result;
-      setStage("crop");
       lastZoomRef.current = 0;
-
-      // Wait for image to render before initialising Cropper
-      setTimeout(() => {
-        cropperRef.current = new window.Cropper(imgRef.current, {
-          aspectRatio: 1,
-          viewMode: 1,
-          dragMode: "move",
-          autoCropArea: 0.9,
-          background: false,
-          responsive: true,
-          zoom(e) {
-            if (!zoomSliderRef.current) return;
-            let v =
-              parseFloat(zoomSliderRef.current.value) +
-              (e.detail.ratio - e.detail.oldRatio);
-            zoomSliderRef.current.value = Math.max(
-              -0.5,
-              Math.min(1.5, v)
-            );
-          },
-        });
-        if (zoomSliderRef.current) zoomSliderRef.current.value = 0;
-        setAspectLabel("Square");
-      }, 50);
+      // Store src in state so React renders <img> first, then useEffect initialises Cropper
+      setImageSrc(ev.target.result);
+      setStage("crop");
     };
     reader.readAsDataURL(file);
   }
@@ -103,6 +120,7 @@ export default function PhotoUpload() {
     if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null; }
     if (fileInputRef.current) fileInputRef.current.value = "";
     lastZoomRef.current = 0;
+    setImageSrc(null);
     setStage("pick");
   }
 
@@ -110,6 +128,7 @@ export default function PhotoUpload() {
     if (fileInputRef.current) fileInputRef.current.value = "";
     setUploaderName("");
     lastZoomRef.current = 0;
+    setImageSrc(null);
     setStage("pick");
   }
 
@@ -320,7 +339,7 @@ export default function PhotoUpload() {
                 </div>
 
                 <div className="pu-crop-wrap">
-                  <img ref={imgRef} alt="Crop preview" />
+                  <img ref={imgRef} src={imageSrc} alt="Crop preview" />
                 </div>
 
                 <div className="pu-zoom-row">
