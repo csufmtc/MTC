@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>MTC — Photo Upload</title>
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap"
+    rel="stylesheet" />
+  <!-- Cropper.js (crop + zoom) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --blue: #406AAF;
+      --blue2: #427AB5;
+      --yellow: #F7DD7D;
+      --cream: #FFE8BE;
+      --white: #ffffff;
+      --slate: #334155;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, var(--blue) 0%, #2d4f8a 100%);
+      min-height: 100vh;
+      color: var(--slate);
+    }
+
+    header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 1.25rem 2rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    header .logo {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--yellow);
+      letter-spacing: 0.15em;
+    }
+
+    header h1 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.1em;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .card {
+      background: var(--white);
+      border-radius: 2rem;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+      padding: 2rem;
+    }
+
+    .card h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--blue);
+      margin-bottom: 0.4rem;
+    }
+
+    .card .subtitle {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-bottom: 1.5rem;
+      line-height: 1.5;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--blue);
+      margin-bottom: 0.35rem;
+      text-transform: uppercase;
+    }
+
+    input[type="text"] {
+      width: 100%;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 0.85rem;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      color: var(--slate);
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 1rem;
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--blue);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 0.85rem;
+      padding: 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-primary:hover {
+      background: var(--blue2);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .file-upload-area {
+      border: 2px dashed #c7d2fe;
+      border-radius: 1rem;
+      padding: 1.75rem;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      margin-bottom: 1rem;
+      background: #f8faff;
+    }
+
+    .file-upload-area:hover {
+      border-color: var(--blue);
+      background: #eef2ff;
+    }
+
+    .file-upload-area input[type="file"] {
+      display: none;
+    }
+
+    .file-upload-area .icon {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .file-upload-area p {
+      font-size: 0.82rem;
+      color: #64748b;
+      margin: 0;
+    }
+
+    .file-upload-area p strong {
+      color: var(--blue);
+    }
+
+    /* ── CROPPER ── */
+    .cropper-stage {
+      display: none;
+    }
+
+    .cropper-stage.active {
+      display: block;
+    }
+
+    .crop-wrap {
+      width: 100%;
+      max-height: 380px;
+      background: #0f172a;
+      border-radius: 1rem;
+      overflow: hidden;
+      margin-bottom: 1rem;
+    }
+
+    .crop-wrap img {
+      display: block;
+      max-width: 100%;
+    }
+
+    .tool-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .tool-btn {
+      background: var(--yellow);
+      color: var(--blue);
+      border: none;
+      border-radius: 0.6rem;
+      min-width: 44px;
+      height: 40px;
+      padding: 0 0.65rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .tool-btn:hover {
+      background: #ffd700;
+      transform: translateY(-1px);
+    }
+
+    .tool-btn.ghost {
+      background: #eef2ff;
+      color: var(--blue);
+    }
+
+    .tool-btn.ghost:hover {
+      background: #e0e7ff;
+    }
+
+    .zoom-slider-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    .zoom-slider-wrap span {
+      font-size: 1.1rem;
+    }
+
+    input[type="range"] {
+      flex: 1;
+      accent-color: var(--blue);
+      cursor: pointer;
+    }
+
+    .aspect-toggle {
+      display: flex;
+      gap: 0.4rem;
+      margin-bottom: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .aspect-toggle button {
+      background: #f1f5f9;
+      color: #64748b;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      cursor: pointer;
+      letter-spacing: 0.05em;
+      transition: all 0.15s;
+    }
+
+    .aspect-toggle button.active {
+      background: var(--blue);
+      color: #fff;
+      border-color: var(--blue);
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .btn-secondary {
+      width: 100%;
+      background: #eef2ff;
+      color: var(--blue);
+      border: none;
+      border-radius: 0.85rem;
+      padding: 0.8rem;
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e7ff;
+    }
+
+    .hint {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    .success-box {
+      display: none;
+      text-align: center;
+      padding: 1rem 0;
+    }
+
+    .success-box.active {
+      display: block;
+    }
+
+    .success-box .check {
+      font-size: 3rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .success-box h3 {
+      color: #16a34a;
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+    }
+
+    .success-box p {
+      color: #64748b;
+      font-size: 0.85rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      left: 2rem;
+      max-width: 360px;
+      margin: 0 auto;
+      background: #1e293b;
+      color: white;
+      padding: 0.85rem 1.5rem;
+      border-radius: 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      opacity: 0;
+      transform: translateY(10px);
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+      z-index: 999;
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .config-warn {
+      background: rgba(247, 221, 125, 0.15);
+      border: 1px solid rgba(247, 221, 125, 0.5);
+      border-radius: 1rem;
+      color: var(--yellow);
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.75rem 1.25rem;
+      text-align: center;
+      letter-spacing: 0.02em;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">MTC</div>
+    <h1>Photo Upload</h1>
+  </header>
+
+  <div class="container">
+
+    <div class="config-warn" id="config-warn" style="display:none;">
+      ⚠️ <strong>Setup needed:</strong> Deploy the Google Apps Script from <code>google-apps-script/Code.gs</code>,
+      then paste the Web App URL into <code>photo-upload.html</code> where it says
+      <code>PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE</code>.
+      Once done, this page will be live at <strong>https://mtccsuf.vercel.com/photo-upload.html</strong>
+      and photos will go directly to your Google Drive folder.
+    </div>
+
+    <div class="card">
+      <h2>📸 Upload Your Photo</h2>
+      <p class="subtitle">Pick a photo, then crop and zoom it just how you like before submitting. Your photo is sent
+        straight to the MTC team.</p>
+
+      <!-- STEP 1: choose name + file -->
+      <div id="pick-stage">
+        <label>Your Name <span style="text-transform:none;color:#94a3b8;font-weight:500;">(optional — helps us label
+            your photo)</span></label>
+        <input type="text" id="uploader-name" placeholder="e.g. Ahad Ahmed" />
+
+        <label>Choose a Photo</label>
+        <div class="file-upload-area" id="drop-zone" onclick="document.getElementById('file-input').click()">
+          <input type="file" id="file-input" accept="image/*" />
+          <div class="icon">📷</div>
+          <p><strong>Click to choose</strong> or drag &amp; drop</p>
+          <p>PNG, JPG, WEBP — one photo at a time</p>
+        </div>
+      </div>
+
+      <!-- STEP 2: crop + zoom -->
+      <div class="cropper-stage" id="cropper-stage">
+        <div class="aspect-toggle" id="aspect-toggle">
+          <button data-ratio="1" class="active">Square</button>
+          <button data-ratio="1.3333">4:3</button>
+          <button data-ratio="0.75">3:4</button>
+          <button data-ratio="NaN">Free</button>
+        </div>
+
+        <div class="crop-wrap">
+          <img id="crop-img" alt="Crop preview" />
+        </div>
+
+        <div class="zoom-slider-wrap">
+          <span title="Zoom out">🔍−</span>
+          <input type="range" id="zoom-slider" min="-0.5" max="1.5" step="0.01" value="0" />
+          <span title="Zoom in">🔍+</span>
+        </div>
+
+        <div class="tool-row">
+          <button class="tool-btn" id="zoom-in" title="Zoom in">＋</button>
+          <button class="tool-btn" id="zoom-out" title="Zoom out">－</button>
+          <button class="tool-btn ghost" id="rotate-left" title="Rotate left">↺</button>
+          <button class="tool-btn ghost" id="rotate-right" title="Rotate right">↻</button>
+          <button class="tool-btn ghost" id="reset-crop" title="Reset">Reset</button>
+        </div>
+
+        <p class="hint">Drag the image to reposition · drag box edges to resize the crop</p>
+
+        <div class="actions">
+          <button class="btn-secondary" id="cancel-btn">↩ Change Photo</button>
+          <button class="btn-primary" id="upload-btn">⬆ Upload</button>
+        </div>
+      </div>
+
+      <!-- STEP 3: success -->
+      <div class="success-box" id="success-box">
+        <div class="check">✅</div>
+        <h3>Photo uploaded!</h3>
+        <p>Thank you — your photo has been sent to the MTC team.</p>
+        <button class="btn-primary" id="another-btn">Upload Another</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ════════════════════════════════════════════════════════════════
+       CONFIG — paste your Google Apps Script Web App URL here.
+       (See the setup steps your developer gave you. It looks like:
+        https://script.google.com/macros/s/AKfycb..../exec )
+       ════════════════════════════════════════════════════════════════ */
+    const UPLOAD_URL = "https://script.google.com/macros/s/AKfycbwxwW6tNkgDQd1k76VVGqBoB8d4V-SUbbuWchAiVkSJcnK8HOIKqWesttklrZbJu3h1sA/exec";
+    /* ════════════════════════════════════════════════════════════════ */
+
+    const $ = (id) => document.getElementById(id);
+    let cropper = null;
+    let currentFile = null;
+
+    if (!UPLOAD_URL || UPLOAD_URL.startsWith("PASTE_")) {
+      $("config-warn").style.display = "block";
+    }
+
+    function showToast(msg) {
+      const t = $("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      setTimeout(() => t.classList.remove("show"), 3200);
+    }
+
+    // ── File selection ──
+    $("file-input").addEventListener("change", (e) => {
+      if (e.target.files && e.target.files[0]) loadImage(e.target.files[0]);
+    });
+
+    const dropZone = $("drop-zone");
+    dropZone.addEventListener("dragover", (e) => { e.preventDefault(); dropZone.style.borderColor = "#406AAF"; });
+    dropZone.addEventListener("dragleave", () => { dropZone.style.borderColor = ""; });
+    dropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = "";
+      const f = e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f) loadImage(f);
+    });
+
+    function loadImage(file) {
+      if (!file.type.startsWith("image/")) { showToast("⚠️ Please choose an image file."); return; }
+      currentFile = file;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        const img = $("crop-img");
+        img.src = ev.target.result;
+        $("pick-stage").style.display = "none";
+        $("cropper-stage").classList.add("active");
+        $("success-box").classList.remove("active");
+
+        if (cropper) cropper.destroy();
+        cropper = new Cropper(img, {
+          aspectRatio: 1,
+          viewMode: 1,
+          dragMode: "move",
+          autoCropArea: 0.9,
+          background: false,
+          responsive: true,
+          zoom(e) {
+            // keep slider roughly in sync when scroll-zooming
+            const s = $("zoom-slider");
+            let v = parseFloat(s.value) + (e.detail.ratio - e.detail.oldRatio);
+            s.value = Math.max(parseFloat(s.min), Math.min(parseFloat(s.max), v));
+          },
+        });
+        $("zoom-slider").value = 0;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // ── Tools ──
+    $("zoom-in").onclick = () => cropper && cropper.zoom(0.1);
+    $("zoom-out").onclick = () => cropper && cropper.zoom(-0.1);
+    $("rotate-left").onclick = () => cropper && cropper.rotate(-90);
+    $("rotate-right").onclick = () => cropper && cropper.rotate(90);
+    $("reset-crop").onclick = () => { if (cropper) { cropper.reset(); $("zoom-slider").value = 0; } };
+
+    let lastZoom = 0;
+    $("zoom-slider").addEventListener("input", (e) => {
+      if (!cropper) return;
+      const v = parseFloat(e.target.value);
+      cropper.zoom(v - lastZoom);
+      lastZoom = v;
+    });
+
+    // ── Aspect ratio toggle ──
+    $("aspect-toggle").querySelectorAll("button").forEach((b) => {
+      b.onclick = () => {
+        $("aspect-toggle").querySelectorAll("button").forEach((x) => x.classList.remove("active"));
+        b.classList.add("active");
+        if (cropper) cropper.setAspectRatio(parseFloat(b.dataset.ratio));
+      };
+    });
+
+    // ── Cancel / change photo ──
+    $("cancel-btn").onclick = () => {
+      if (cropper) { cropper.destroy(); cropper = null; }
+      $("file-input").value = "";
+      currentFile = null;
+      lastZoom = 0;
+      $("cropper-stage").classList.remove("active");
+      $("pick-stage").style.display = "block";
+    };
+
+    $("another-btn").onclick = () => {
+      $("success-box").classList.remove("active");
+      $("file-input").value = "";
+      $("uploader-name").value = "";
+      currentFile = null;
+      lastZoom = 0;
+      $("pick-stage").style.display = "block";
+    };
+
+    // ── Upload ──
+    $("upload-btn").onclick = async () => {
+      if (!cropper) return;
+      if (!UPLOAD_URL || UPLOAD_URL.startsWith("PASTE_")) {
+        showToast("⚠️ Upload endpoint not set up yet. Contact the admin.");
+        return;
+      }
+      const btn = $("upload-btn");
+      btn.disabled = true;
+      btn.textContent = "Uploading…";
+
+      try {
+        const canvas = cropper.getCroppedCanvas({
+          maxWidth: 2000,
+          maxHeight: 2000,
+          imageSmoothingQuality: "high",
+        });
+        const dataUrl = canvas.toDataURL("image/jpeg", 0.92);
+        const base64 = dataUrl.split(",")[1];
+
+        const name = ($("uploader-name").value.trim() || "photo").replace(/[^a-z0-9_\- ]/gi, "").replace(/\s+/g, "_");
+        const ts = new Date().toISOString().slice(0, 19).replace(/[:T]/g, "-");
+        const filename = `${name}_${ts}.jpg`;
+
+        // text/plain keeps this a "simple" request → no CORS preflight against Apps Script
+        const res = await fetch(UPLOAD_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({ image: base64, mimeType: "image/jpeg", filename }),
+        });
+        const out = await res.json().catch(() => ({}));
+        if (!res.ok || out.ok === false) throw new Error(out.error || "Upload failed");
+
+        if (cropper) { cropper.destroy(); cropper = null; }
+        lastZoom = 0;
+        $("cropper-stage").classList.remove("active");
+        $("success-box").classList.add("active");
+        showToast("✅ Uploaded successfully!");
+      } catch (err) {
+        showToast("❌ Upload failed. Please try again or contact the admin.");
+        console.error(err);
+      }
+      btn.disabled = false;
+      btn.textContent = "⬆ Upload";
+    };
+  </script>
+</body>
+
+</html>
