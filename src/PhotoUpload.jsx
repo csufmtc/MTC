@@ -165,7 +165,7 @@ export default function PhotoUpload() {
       setStage("success");
       showToast("✅ Uploaded successfully!");
     } catch (err) {
-      showToast("❌ Upload failed. Please try again.");
+      showToast(`❌ Upload failed: ${err.message || err}`);
       console.error(err);
     }
 
