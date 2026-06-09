@@ -126,7 +126,13 @@ export default function GraduatesPage() {
         </div>
       </main>
 
-      <footer style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)", padding:"1.5rem", display:"flex", alignItems:"center", justifyContent:"center", gap:"0.75rem", flexWrap:"wrap" }}>
+      <footer style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)", padding:"2rem 1.5rem", display:"flex", flexDirection:"column", alignItems:"center", gap:"1.25rem" }}>
+        <div style={{ display:"flex", justifyContent:"center", gap:"1.5rem", flexWrap:"wrap" }}>
+          <button onClick={goHome} className="mono" style={{ background:"none", border:"none", cursor:"pointer", fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Home</button>
+          <a href="#/sitemap" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Sitemap</a>
+          <a href="#/opensource" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Open Source</a>
+          <a href="#/upload" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Photo Upload</a>
+        </div>
         <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"var(--muted)" }}>© Muslim Tech Collaborative @ CSUF · Congratulations Class of 2026</span>
       </footer>
     </div>

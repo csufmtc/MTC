@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import GraduatesPage from "./GraduatesPage.jsx";
 import PhotoUpload from "./PhotoUpload.jsx";
+import SitemapPage from "./SitemapPage.jsx";
+import OpenSourcePage from "./OpenSourcePage.jsx";
 
 export default function MTCCSUFSite() {
   const [route, setRoute] = useState(() => window.location.hash);
@@ -39,6 +41,8 @@ export default function MTCCSUFSite() {
 
   if (route === "#/graduates") return <GraduatesPage />;
   if (route === "#/upload") return <PhotoUpload />;
+  if (route === "#/sitemap") return <SitemapPage />;
+  if (route === "#/opensource") return <OpenSourcePage />;
 
   const fmt12 = (t) => { if (!t) return ""; const [hh, mm] = t.split(":"); const h = +hh; return `${h % 12 || 12}:${mm} ${h >= 12 ? "PM" : "AM"}`; };
   const fmtDate = (s) => { if (!s) return ""; const [, m, d] = s.split("-"); return `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1]} ${+d}`; };
@@ -431,10 +435,18 @@ export default function MTCCSUFSite() {
       </main>
 
       {/* ── FOOTER ── */}
-      <footer style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)", padding:"1.5rem", display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:"0.75rem" }}>
-        <span className="mono" style={{ fontSize:"0.65rem", letterSpacing:"0.25em", textTransform:"uppercase", color:"var(--gold)" }}>MTC</span>
-        <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"var(--muted)" }}>© Muslim Tech Collaborative @ CSUF</span>
-        <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"var(--muted)" }}>Fullerton, CA</span>
+      <footer style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)", padding:"2rem 1.5rem", display:"flex", flexDirection:"column", alignItems:"center", gap:"1.25rem" }}>
+        <div style={{ display:"flex", justifyContent:"center", gap:"1.5rem", flexWrap:"wrap" }}>
+          <a href="#/sitemap" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Sitemap</a>
+          <a href="#/opensource" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Open Source</a>
+          <a href="#/upload" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Photo Upload</a>
+          <a href="#/graduates" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Graduates</a>
+        </div>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", width:"100%", maxWidth:"1280px", flexWrap:"wrap", gap:"0.75rem", borderTop:"1px solid rgba(201,168,76,0.08)", paddingTop:"1.25rem" }}>
+          <span className="mono" style={{ fontSize:"0.65rem", letterSpacing:"0.25em", textTransform:"uppercase", color:"var(--gold)" }}>MTC</span>
+          <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"var(--muted)" }}>© Muslim Tech Collaborative @ CSUF</span>
+          <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"var(--muted)" }}>Fullerton, CA</span>
+        </div>
       </footer>
     </div>
   );

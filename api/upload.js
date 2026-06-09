@@ -1,3 +1,4 @@
+/* global process */
 /**
  * Vercel Serverless Function — /api/upload
  * Proxies photo uploads to Google Apps Script so the Apps Script

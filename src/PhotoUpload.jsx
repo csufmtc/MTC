@@ -15,7 +15,7 @@ export default function PhotoUpload() {
   const imgRef = useRef(null);
   const fileInputRef = useRef(null);
   const zoomSliderRef = useRef(null);
-  const lastZoomRef = useRef(0);
+  const initialRatioRef = useRef(1);
 
   const ASPECT_RATIOS = {
     Square: 1,
@@ -53,11 +53,15 @@ export default function PhotoUpload() {
         autoCropArea: 0.9,
         background: false,
         responsive: true,
+        ready() {
+          if (cropperRef.current) {
+            const canvasData = cropperRef.current.getCanvasData();
+            initialRatioRef.current = canvasData.width / canvasData.naturalWidth;
+          }
+        },
         zoom(e) {
-          if (!zoomSliderRef.current) return;
-          let v =
-            parseFloat(zoomSliderRef.current.value) +
-            (e.detail.ratio - e.detail.oldRatio);
+          if (!zoomSliderRef.current || !initialRatioRef.current) return;
+          const v = (e.detail.ratio / initialRatioRef.current) - 1;
           zoomSliderRef.current.value = Math.max(-0.5, Math.min(1.5, v));
         },
       });
@@ -65,8 +69,13 @@ export default function PhotoUpload() {
       setAspectLabel("Square");
     }, 50);
 
-    return () => clearTimeout(timer);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      clearTimeout(timer);
+      if (cropperRef.current) {
+        cropperRef.current.destroy();
+        cropperRef.current = null;
+      }
+    };
   }, [stage, imageSrc]);
 
   function showToast(msg, duration = 3200) {
@@ -85,7 +94,6 @@ export default function PhotoUpload() {
         cropperRef.current.destroy();
         cropperRef.current = null;
       }
-      lastZoomRef.current = 0;
       // Store src in state so React renders <img> first, then useEffect initialises Cropper
       setImageSrc(ev.target.result);
       setStage("crop");
@@ -110,16 +118,15 @@ export default function PhotoUpload() {
   }
 
   function handleZoomSlider(e) {
-    if (!cropperRef.current) return;
+    if (!cropperRef.current || !initialRatioRef.current) return;
     const v = parseFloat(e.target.value);
-    cropperRef.current.zoom(v - lastZoomRef.current);
-    lastZoomRef.current = v;
+    const targetRatio = initialRatioRef.current * (1 + v);
+    cropperRef.current.zoomTo(targetRatio);
   }
 
   function cancelCrop() {
     if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null; }
     if (fileInputRef.current) fileInputRef.current.value = "";
-    lastZoomRef.current = 0;
     setImageSrc(null);
     setStage("pick");
   }
@@ -127,7 +134,6 @@ export default function PhotoUpload() {
   function uploadAnother() {
     if (fileInputRef.current) fileInputRef.current.value = "";
     setUploaderName("");
-    lastZoomRef.current = 0;
     setImageSrc(null);
     setStage("pick");
   }
@@ -161,7 +167,6 @@ export default function PhotoUpload() {
       if (!res.ok || out.ok === false) throw new Error(out.error || "Upload failed");
 
       if (cropperRef.current) { cropperRef.current.destroy(); cropperRef.current = null; }
-      lastZoomRef.current = 0;
       setStage("success");
       showToast("✅ Uploaded successfully!");
     } catch (err) {
@@ -361,7 +366,7 @@ export default function PhotoUpload() {
                   <button className="pu-tool" onClick={() => cropperRef.current?.zoom(-0.1)}>－</button>
                   <button className="pu-tool ghost" onClick={() => cropperRef.current?.rotate(-90)}>↺</button>
                   <button className="pu-tool ghost" onClick={() => cropperRef.current?.rotate(90)}>↻</button>
-                  <button className="pu-tool ghost" onClick={() => { cropperRef.current?.reset(); if (zoomSliderRef.current) zoomSliderRef.current.value = 0; lastZoomRef.current = 0; }}>Reset</button>
+                  <button className="pu-tool ghost" onClick={() => { cropperRef.current?.reset(); if (zoomSliderRef.current) zoomSliderRef.current.value = 0; }}>Reset</button>
                 </div>
 
                 <p className="pu-hint">Drag the image to reposition · drag box edges to resize</p>
@@ -386,6 +391,16 @@ export default function PhotoUpload() {
             )}
           </div>
         </div>
+
+        <footer style={{ background:"rgba(255,255,255,0.05)", borderTop:"1px solid rgba(255,255,255,0.1)", padding:"2rem 1.5rem", display:"flex", flexDirection:"column", alignItems:"center", gap:"1.25rem", color:"rgba(255,255,255,0.7)", marginTop:"2rem" }}>
+          <div style={{ display:"flex", justifyContent:"center", gap:"1.5rem", flexWrap:"wrap" }}>
+            <button onClick={cancelCrop} className="mono" style={{ background:"none", border:"none", cursor:"pointer", fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"rgba(255,255,255,0.6)", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="#F7DD7D"} onMouseLeave={(e)=>e.target.style.color="rgba(255,255,255,0.6)"}>Home</button>
+            <a href="#/sitemap" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"rgba(255,255,255,0.6)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="#F7DD7D"} onMouseLeave={(e)=>e.target.style.color="rgba(255,255,255,0.6)"}>Sitemap</a>
+            <a href="#/opensource" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"rgba(255,255,255,0.6)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="#F7DD7D"} onMouseLeave={(e)=>e.target.style.color="rgba(255,255,255,0.6)"}>Open Source</a>
+            <a href="#/graduates" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"rgba(255,255,255,0.6)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="#F7DD7D"} onMouseLeave={(e)=>e.target.style.color="rgba(255,255,255,0.6)"}>Graduates</a>
+          </div>
+          <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"rgba(255,255,255,0.5)" }}>© Muslim Tech Collaborative @ CSUF</span>
+        </footer>
 
         {toast && <div className="pu-toast">{toast}</div>}
       </div>
