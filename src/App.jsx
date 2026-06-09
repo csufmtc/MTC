@@ -45,7 +45,7 @@ export default function MTCCSUFSite() {
   if (route === "#/opensource") return <OpenSourcePage />;
 
   const fmt12 = (t) => { if (!t) return ""; const [hh, mm] = t.split(":"); const h = +hh; return `${h % 12 || 12}:${mm} ${h >= 12 ? "PM" : "AM"}`; };
-  const fmtDate = (s) => { if (!s) return ""; const [, m, d] = s.split("-"); return `${["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][+m-1]} ${+d}`; };
+  const fmtDate = (s) => { if (!s) return ""; const [, m, d] = s.split("-"); return `${["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][+m - 1]} ${+d}`; };
   const initials = (n) => n.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
   const scrollTo = (id) => { document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }); setMenuOpen(false); };
 
@@ -172,14 +172,14 @@ export default function MTCCSUFSite() {
       `}</style>
 
       {/* ── NAVBAR ── */}
-      <header style={{ position:"fixed", top:0, left:0, right:0, zIndex:100, borderBottom:"1px solid rgba(201,168,76,0.12)", background:"rgba(5,10,20,0.92)", backdropFilter:"blur(16px)" }}>
-        <div style={{ maxWidth:1280, margin:"0 auto", padding:"0 1.5rem", display:"flex", alignItems:"center", justifyContent:"space-between", height:72 }}>
-          <button onClick={() => scrollTo("home")} className="mono" style={{ fontSize:"0.75rem", letterSpacing:"0.35em", color:"var(--gold)", fontWeight:500, background:"none", border:"none", cursor:"pointer" }}>MTC</button>
+      <header style={{ position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, borderBottom: "1px solid rgba(201,168,76,0.12)", background: "rgba(5,10,20,0.92)", backdropFilter: "blur(16px)" }}>
+        <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 72 }}>
+          <button onClick={() => scrollTo("home")} className="mono" style={{ fontSize: "0.75rem", letterSpacing: "0.35em", color: "var(--gold)", fontWeight: 500, background: "none", border: "none", cursor: "pointer" }}>MTC</button>
           <nav className="nav-desktop">
             {navItems.map((item) => (
               <button key={item.id} onClick={() => scrollTo(item.id)} className="nav-link">{item.label}</button>
             ))}
-            <a href="/admin.html" className="nav-admin">Admin</a>
+
           </nav>
           <button className="nav-hamburger" onClick={() => setMenuOpen(true)}>☰</button>
         </div>
@@ -188,90 +188,89 @@ export default function MTCCSUFSite() {
       {/* Mobile menu */}
       {menuOpen && (
         <div className="mobile-menu">
-          <button onClick={() => setMenuOpen(false)} style={{ position:"absolute", top:"1.5rem", right:"1.5rem", background:"none", border:"none", cursor:"pointer", color:"var(--gold)", fontSize:"1.6rem" }}>✕</button>
+          <button onClick={() => setMenuOpen(false)} style={{ position: "absolute", top: "1.5rem", right: "1.5rem", background: "none", border: "none", cursor: "pointer", color: "var(--gold)", fontSize: "1.6rem" }}>✕</button>
           {navItems.map((item) => (
             <button key={item.id} onClick={() => scrollTo(item.id)} className="mobile-nav-btn">{item.label}</button>
           ))}
-          <a href="/admin.html" className="nav-admin" style={{ marginTop:"0.5rem" }}>Admin</a>
         </div>
       )}
 
       <main>
         {/* ── HOME ── */}
-        <section id="home" className="section-shell noise" style={{ display:"flex", alignItems:"center", overflow:"hidden", background:"linear-gradient(155deg,#050A14 0%,#0B1628 50%,#050A14 100%)", paddingTop:72 }}>
-          <div style={{ position:"absolute", top:"8%", right:"-5%", width:"42vw", height:"42vw", maxWidth:600, maxHeight:600, borderRadius:"50%", background:"radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%)", pointerEvents:"none" }} />
-          <div style={{ position:"absolute", bottom:"10%", left:"-8%", width:"35vw", height:"35vw", maxWidth:500, maxHeight:500, borderRadius:"50%", background:"radial-gradient(circle,rgba(201,168,76,0.04) 0%,transparent 70%)", pointerEvents:"none" }} />
-          {[15,35,65,85].map(p => <div key={p} style={{ position:"absolute", top:0, bottom:0, left:`${p}%`, width:1, background:"rgba(201,168,76,0.04)", pointerEvents:"none" }} />)}
+        <section id="home" className="section-shell noise" style={{ display: "flex", alignItems: "center", overflow: "hidden", background: "linear-gradient(155deg,#050A14 0%,#0B1628 50%,#050A14 100%)", paddingTop: 72 }}>
+          <div style={{ position: "absolute", top: "8%", right: "-5%", width: "42vw", height: "42vw", maxWidth: 600, maxHeight: 600, borderRadius: "50%", background: "radial-gradient(circle,rgba(201,168,76,0.06) 0%,transparent 70%)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", bottom: "10%", left: "-8%", width: "35vw", height: "35vw", maxWidth: 500, maxHeight: 500, borderRadius: "50%", background: "radial-gradient(circle,rgba(201,168,76,0.04) 0%,transparent 70%)", pointerEvents: "none" }} />
+          {[15, 35, 65, 85].map(p => <div key={p} style={{ position: "absolute", top: 0, bottom: 0, left: `${p}%`, width: 1, background: "rgba(201,168,76,0.04)", pointerEvents: "none" }} />)}
 
           <div className="hero-inner">
-            <div style={{ display:"flex", alignItems:"center", gap:"0.75rem", marginBottom:"2rem" }}>
-              <div style={{ width:"2rem", height:1, background:"var(--gold)", flexShrink:0 }} />
-              <span className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.28em", textTransform:"uppercase", color:"var(--gold)" }}>Muslim Tech Collaborative @ CSUF</span>
+            <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "2rem" }}>
+              <div style={{ width: "2rem", height: 1, background: "var(--gold)", flexShrink: 0 }} />
+              <span className="mono" style={{ fontSize: "0.6rem", letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--gold)" }}>Muslim Tech Collaborative @ CSUF</span>
             </div>
 
             <h1 className="hero-giant">
               MTC
-              <span style={{ position:"absolute", width:1, height:1, padding:0, margin:-1, overflow:"hidden", clip:"rect(0,0,0,0)", whiteSpace:"nowrap", border:0 }}>
+              <span style={{ position: "absolute", width: 1, height: 1, padding: 0, margin: -1, overflow: "hidden", clip: "rect(0,0,0,0)", whiteSpace: "nowrap", border: 0 }}>
                 {" "}— Muslim Tech Collaborative at California State University, Fullerton (CSUF)
               </span>
             </h1>
 
             <div className="hero-grid">
               <div>
-                <p className="serif" style={{ fontSize:"clamp(1.1rem,3vw,1.4rem)", color:"var(--white)", fontWeight:300, lineHeight:1.6, fontStyle:"italic" }}>Muslim Tech Collaborative @ California State University, Fullerton</p>
-                <p style={{ marginTop:"0.75rem", fontSize:"0.875rem", color:"var(--muted)", lineHeight:1.8 }}>A space where faith, leadership, and technology converge at California State University, Fullerton.</p>
+                <p className="serif" style={{ fontSize: "clamp(1.1rem,3vw,1.4rem)", color: "var(--white)", fontWeight: 300, lineHeight: 1.6, fontStyle: "italic" }}>Muslim Tech Collaborative @ California State University, Fullerton</p>
+                <p style={{ marginTop: "0.75rem", fontSize: "0.875rem", color: "var(--muted)", lineHeight: 1.8 }}>A space where faith, leadership, and technology converge at California State University, Fullerton.</p>
                 <div className="hero-btns">
                   <button className="btn-gold" onClick={() => scrollTo("about")}>Learn More</button>
                   <button className="btn-outline" onClick={() => scrollTo("contact")}>Connect</button>
                 </div>
               </div>
               <div className="hero-stat-grid">
-                {[["50+","Members"],["8","Core Leaders"],["CSUF","Campus"],["Tech & Faith","Focus"]].map(([val,lab]) => (
+                {[["50+", "Members"], ["8", "Core Leaders"], ["CSUF", "Campus"], ["Tech & Faith", "Focus"]].map(([val, lab]) => (
                   <div key={lab} className="hero-stat">
-                    <div className="serif" style={{ fontSize:"clamp(1.4rem,3vw,1.8rem)", fontWeight:700, color:"var(--gold2)" }}>{val}</div>
-                    <div className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.18em", textTransform:"uppercase", color:"var(--muted)", marginTop:"0.3rem" }}>{lab}</div>
+                    <div className="serif" style={{ fontSize: "clamp(1.4rem,3vw,1.8rem)", fontWeight: 700, color: "var(--gold2)" }}>{val}</div>
+                    <div className="mono" style={{ fontSize: "0.56rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--muted)", marginTop: "0.3rem" }}>{lab}</div>
                   </div>
                 ))}
               </div>
             </div>
           </div>
-          <div style={{ position:"absolute", bottom:0, left:0, right:0, height:1, background:"linear-gradient(90deg,transparent,var(--gold),transparent)" }} />
+          <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 1, background: "linear-gradient(90deg,transparent,var(--gold),transparent)" }} />
         </section>
 
         {/* ── MARQUEE ── */}
-        <div style={{ background:"var(--gold)", overflow:"hidden", padding:"0.6rem 0" }}>
+        <div style={{ background: "var(--gold)", overflow: "hidden", padding: "0.6rem 0" }}>
           <div className="marquee-track">
-            {Array(8).fill(["MUSLIM","TECH","COLLABORATIVE","CSUF","◆"]).flat().map((word, i) => (
-              <span key={i} className="mono" style={{ fontSize:"0.6rem", fontWeight:500, letterSpacing:"0.3em", textTransform:"uppercase", color:"var(--navy)", marginRight:"2.5rem" }}>{word}</span>
+            {Array(8).fill(["MUSLIM", "TECH", "COLLABORATIVE", "CSUF", "◆"]).flat().map((word, i) => (
+              <span key={i} className="mono" style={{ fontSize: "0.6rem", fontWeight: 500, letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--navy)", marginRight: "2.5rem" }}>{word}</span>
             ))}
           </div>
         </div>
 
         {/* ── ABOUT ── */}
-        <section id="about" className="section-shell section-pad" style={{ background:"var(--navy)" }}>
+        <section id="about" className="section-shell section-pad" style={{ background: "var(--navy)" }}>
           <div className="section-inner">
             <div className="about-layout">
               <div>
                 <span className="section-label">About</span>
-                <h2 className="serif" style={{ fontSize:"clamp(2rem,5vw,3.5rem)", fontWeight:700, color:"var(--white)", marginTop:"0.75rem", lineHeight:1.1 }}>About MTC</h2>
+                <h2 className="serif" style={{ fontSize: "clamp(2rem,5vw,3.5rem)", fontWeight: 700, color: "var(--white)", marginTop: "0.75rem", lineHeight: 1.1 }}>About MTC</h2>
                 <div className="gold-bar" />
               </div>
               <div>
-                <p className="serif" style={{ fontSize:"clamp(1.05rem,2.5vw,1.3rem)", color:"var(--white)", fontWeight:300, lineHeight:1.7, fontStyle:"italic", marginBottom:"1.75rem" }}>
+                <p className="serif" style={{ fontSize: "clamp(1.05rem,2.5vw,1.3rem)", color: "var(--white)", fontWeight: 300, lineHeight: 1.7, fontStyle: "italic", marginBottom: "1.75rem" }}>
                   MTC is a student organization dedicated to building a supportive and empowering community for students pursuing careers in technology.
                 </p>
-                <div style={{ padding:"1.25rem 1.5rem", border:"1px solid var(--border)", background:"var(--navy2)", marginBottom:"2rem" }}>
+                <div style={{ padding: "1.25rem 1.5rem", border: "1px solid var(--border)", background: "var(--navy2)", marginBottom: "2rem" }}>
                   <span className="section-label">Our Mission</span>
-                  <p style={{ marginTop:"0.65rem", color:"var(--muted)", lineHeight:1.9, fontSize:"0.875rem" }}>
+                  <p style={{ marginTop: "0.65rem", color: "var(--muted)", lineHeight: 1.9, fontSize: "0.875rem" }}>
                     We bridge the gap between faith identity and professional ambition through mentorship, networking, events, and collaborative projects.
                   </p>
                 </div>
                 <div className="about-cards">
                   {aboutCards.map((card) => (
                     <div key={card.title} className="about-card">
-                      <span style={{ fontSize:"1rem", color:"var(--gold)", display:"block", marginBottom:"0.6rem" }}>{card.icon}</span>
-                      <h3 className="serif" style={{ fontSize:"1.15rem", fontWeight:700, color:"var(--white)", marginBottom:"0.5rem" }}>{card.title}</h3>
-                      <p style={{ fontSize:"0.84rem", color:"var(--muted)", lineHeight:1.8 }}>{card.text}</p>
+                      <span style={{ fontSize: "1rem", color: "var(--gold)", display: "block", marginBottom: "0.6rem" }}>{card.icon}</span>
+                      <h3 className="serif" style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--white)", marginBottom: "0.5rem" }}>{card.title}</h3>
+                      <p style={{ fontSize: "0.84rem", color: "var(--muted)", lineHeight: 1.8 }}>{card.text}</p>
                     </div>
                   ))}
                 </div>
@@ -281,18 +280,18 @@ export default function MTCCSUFSite() {
         </section>
 
         {/* ── TEAM ── */}
-        <section id="team" className="section-shell section-pad" style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)" }}>
+        <section id="team" className="section-shell section-pad" style={{ background: "var(--navy2)", borderTop: "1px solid var(--border)" }}>
           <div className="section-inner">
             <span className="section-label">Team</span>
             <div className="team-header">
               <div>
-                <h2 className="serif" style={{ fontSize:"clamp(2rem,5vw,3.5rem)", fontWeight:700, color:"var(--white)", lineHeight:1.1 }}>Meet Our Team</h2>
+                <h2 className="serif" style={{ fontSize: "clamp(2rem,5vw,3.5rem)", fontWeight: 700, color: "var(--white)", lineHeight: 1.1 }}>Meet Our Team</h2>
                 <div className="gold-bar" />
               </div>
-              <div style={{ display:"flex", alignItems:"center", gap:"0.75rem", flexShrink:0 }}>
-                <span className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.18em", textTransform:"uppercase", color:"var(--muted)" }}>Term</span>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", flexShrink: 0 }}>
+                <span className="mono" style={{ fontSize: "0.6rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--muted)" }}>Term</span>
                 <select value={selectedBoardTerm} onChange={(e) => setSelectedBoardTerm(e.target.value)}
-                  style={{ background:"var(--navy3)", border:"1px solid var(--border)", color:"var(--white)", fontFamily:"'DM Mono',monospace", fontSize:"0.68rem", letterSpacing:"0.1em", padding:"0.45rem 0.9rem", outline:"none", cursor:"pointer" }}>
+                  style={{ background: "var(--navy3)", border: "1px solid var(--border)", color: "var(--white)", fontFamily: "'DM Mono',monospace", fontSize: "0.68rem", letterSpacing: "0.1em", padding: "0.45rem 0.9rem", outline: "none", cursor: "pointer" }}>
                   {boardTerms.map((t) => <option key={t} value={t}>{t}</option>)}
                 </select>
               </div>
@@ -303,21 +302,21 @@ export default function MTCCSUFSite() {
                 {currentTeam.map((member) => (
                   <div key={member.name} className="team-card">
                     <div className="team-avatar">{initials(member.name)}</div>
-                    <h3 className="serif" style={{ fontSize:"1.05rem", fontWeight:700, color:"var(--white)" }}>{member.name}</h3>
-                    <p className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.18em", textTransform:"uppercase", color:"var(--gold)", marginTop:"0.3rem" }}>{member.role}</p>
+                    <h3 className="serif" style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--white)" }}>{member.name}</h3>
+                    <p className="mono" style={{ fontSize: "0.56rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--gold)", marginTop: "0.3rem" }}>{member.role}</p>
                   </div>
                 ))}
               </div>
             ) : (
-              <div style={{ marginTop:"2rem", padding:"3rem 1rem", border:"1px solid var(--border)", textAlign:"center" }}>
-                <p className="serif" style={{ fontSize:"1.3rem", color:"var(--muted)", fontStyle:"italic" }}>No members for this term.</p>
-                <p className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.2em", color:"var(--gold)", marginTop:"0.75rem", textTransform:"uppercase" }}>Check back soon</p>
+              <div style={{ marginTop: "2rem", padding: "3rem 1rem", border: "1px solid var(--border)", textAlign: "center" }}>
+                <p className="serif" style={{ fontSize: "1.3rem", color: "var(--muted)", fontStyle: "italic" }}>No members for this term.</p>
+                <p className="mono" style={{ fontSize: "0.6rem", letterSpacing: "0.2em", color: "var(--gold)", marginTop: "0.75rem", textTransform: "uppercase" }}>Check back soon</p>
               </div>
             )}
 
             {/* Graduates page link */}
-            <div style={{ marginTop:"2.5rem", textAlign:"center" }}>
-              <a href="#/graduates" className="btn-gold" style={{ display:"inline-block", textDecoration:"none" }}>
+            <div style={{ marginTop: "2.5rem", textAlign: "center" }}>
+              <a href="#/graduates" className="btn-gold" style={{ display: "inline-block", textDecoration: "none" }}>
                 Celebrating Our 2026 Graduates →
               </a>
             </div>
@@ -325,29 +324,29 @@ export default function MTCCSUFSite() {
         </section>
 
         {/* ── EVENTS ── */}
-        <section id="events" className="section-shell section-pad" style={{ background:"var(--navy)", borderTop:"1px solid var(--border)" }}>
+        <section id="events" className="section-shell section-pad" style={{ background: "var(--navy)", borderTop: "1px solid var(--border)" }}>
           <div className="section-inner">
             <span className="section-label">Events</span>
-            <h2 className="serif" style={{ fontSize:"clamp(2rem,5vw,3.5rem)", fontWeight:700, color:"var(--white)", lineHeight:1.1, marginTop:"0.75rem" }}>What's Happening</h2>
-            <div className="gold-bar" style={{ marginBottom:"2.5rem" }} />
+            <h2 className="serif" style={{ fontSize: "clamp(2rem,5vw,3.5rem)", fontWeight: 700, color: "var(--white)", lineHeight: 1.1, marginTop: "0.75rem" }}>What's Happening</h2>
+            <div className="gold-bar" style={{ marginBottom: "2.5rem" }} />
             <hr className="divider" />
 
             {eventsToShow.length === 0 ? (
-              <div style={{ padding:"3rem 1rem", textAlign:"center" }}>
-                <p className="serif" style={{ fontSize:"1.3rem", color:"var(--muted)", fontStyle:"italic" }}>No upcoming events.</p>
+              <div style={{ padding: "3rem 1rem", textAlign: "center" }}>
+                <p className="serif" style={{ fontSize: "1.3rem", color: "var(--muted)", fontStyle: "italic" }}>No upcoming events.</p>
               </div>
             ) : eventsToShow.map((ev) => {
               const timeStr = ev.start || ev.end ? fmt12(ev.start) + (ev.end ? " – " + fmt12(ev.end) : "") : ev.time || "";
               return (
                 <div key={ev.id} className="event-row">
                   <div>
-                    <div className="mono" style={{ fontSize:"0.95rem", fontWeight:500, color:"var(--gold)" }}>{fmtDate(ev.date)}</div>
-                    {timeStr && <div className="mono" style={{ fontSize:"0.58rem", letterSpacing:"0.15em", color:"var(--muted)", marginTop:"0.2rem", textTransform:"uppercase" }}>{timeStr}</div>}
+                    <div className="mono" style={{ fontSize: "0.95rem", fontWeight: 500, color: "var(--gold)" }}>{fmtDate(ev.date)}</div>
+                    {timeStr && <div className="mono" style={{ fontSize: "0.58rem", letterSpacing: "0.15em", color: "var(--muted)", marginTop: "0.2rem", textTransform: "uppercase" }}>{timeStr}</div>}
                   </div>
                   <div>
                     <span className="tag">{ev.tag}</span>
-                    <h3 className="serif" style={{ fontSize:"clamp(1.2rem,3vw,1.55rem)", fontWeight:700, color:"var(--white)", marginTop:"0.55rem", lineHeight:1.2 }}>{ev.title}</h3>
-                    <p style={{ marginTop:"0.45rem", fontSize:"0.875rem", color:"var(--muted)", lineHeight:1.8 }}>{ev.desc}</p>
+                    <h3 className="serif" style={{ fontSize: "clamp(1.2rem,3vw,1.55rem)", fontWeight: 700, color: "var(--white)", marginTop: "0.55rem", lineHeight: 1.2 }}>{ev.title}</h3>
+                    <p style={{ marginTop: "0.45rem", fontSize: "0.875rem", color: "var(--muted)", lineHeight: 1.8 }}>{ev.desc}</p>
                   </div>
                 </div>
               );
@@ -357,31 +356,31 @@ export default function MTCCSUFSite() {
 
         {/* ── LIGHTBOX ── */}
         {lightbox && (
-          <div onClick={() => setLightbox(null)} style={{ position:"fixed", inset:0, zIndex:300, background:"rgba(5,10,20,0.95)", backdropFilter:"blur(12px)", display:"flex", alignItems:"center", justifyContent:"center", padding:"1.5rem" }}>
-            <div onClick={(e) => e.stopPropagation()} style={{ position:"relative", maxWidth:900, width:"100%" }}>
-              <button onClick={() => setLightbox(null)} style={{ position:"absolute", top:"-3rem", right:0, background:"none", border:"none", cursor:"pointer", color:"var(--gold)", fontSize:"1.1rem", fontFamily:"'DM Mono',monospace" }}>✕ Close</button>
-              <img src={lightbox.src} alt={lightbox.caption} style={{ width:"100%", maxHeight:"80vh", objectFit:"contain" }} />
-              {lightbox.caption && <p className="serif" style={{ textAlign:"center", marginTop:"1rem", color:"var(--white)", fontStyle:"italic", fontSize:"1.05rem" }}>{lightbox.caption}</p>}
+          <div onClick={() => setLightbox(null)} style={{ position: "fixed", inset: 0, zIndex: 300, background: "rgba(5,10,20,0.95)", backdropFilter: "blur(12px)", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem" }}>
+            <div onClick={(e) => e.stopPropagation()} style={{ position: "relative", maxWidth: 900, width: "100%" }}>
+              <button onClick={() => setLightbox(null)} style={{ position: "absolute", top: "-3rem", right: 0, background: "none", border: "none", cursor: "pointer", color: "var(--gold)", fontSize: "1.1rem", fontFamily: "'DM Mono',monospace" }}>✕ Close</button>
+              <img src={lightbox.src} alt={lightbox.caption} style={{ width: "100%", maxHeight: "80vh", objectFit: "contain" }} />
+              {lightbox.caption && <p className="serif" style={{ textAlign: "center", marginTop: "1rem", color: "var(--white)", fontStyle: "italic", fontSize: "1.05rem" }}>{lightbox.caption}</p>}
             </div>
           </div>
         )}
 
         {/* ── GALLERY ── */}
-        <section id="gallery" className="section-shell section-pad" style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)" }}>
+        <section id="gallery" className="section-shell section-pad" style={{ background: "var(--navy2)", borderTop: "1px solid var(--border)" }}>
           <div className="section-inner">
             <span className="section-label">Gallery</span>
-            <h2 className="serif" style={{ fontSize:"clamp(2rem,5vw,3.5rem)", fontWeight:700, color:"var(--white)", lineHeight:1.1, marginTop:"0.75rem" }}>Community Moments</h2>
-            <div className="gold-bar" style={{ marginBottom:"2.5rem" }} />
+            <h2 className="serif" style={{ fontSize: "clamp(2rem,5vw,3.5rem)", fontWeight: 700, color: "var(--white)", lineHeight: 1.1, marginTop: "0.75rem" }}>Community Moments</h2>
+            <div className="gold-bar" style={{ marginBottom: "2.5rem" }} />
 
             {gallery.length > 0 ? (
               <div className="gallery-grid">
                 {gallery.map((item) => (
-                  <div key={item.id} className="gallery-item" onClick={() => setLightbox({ src:item.src, caption:item.caption })}>
-                    <img src={item.src} alt={item.caption} style={{ width:"100%", height:"100%", objectFit:"cover", transition:"transform .4s" }}
-                      onMouseEnter={(e) => e.currentTarget.style.transform="scale(1.04)"}
-                      onMouseLeave={(e) => e.currentTarget.style.transform="scale(1)"} />
+                  <div key={item.id} className="gallery-item" onClick={() => setLightbox({ src: item.src, caption: item.caption })}>
+                    <img src={item.src} alt={item.caption} style={{ width: "100%", height: "100%", objectFit: "cover", transition: "transform .4s" }}
+                      onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.04)"}
+                      onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"} />
                     <div className="gallery-overlay">
-                      <p className="serif" style={{ color:"var(--white)", fontWeight:600, fontSize:"1rem" }}>{item.caption}</p>
+                      <p className="serif" style={{ color: "var(--white)", fontWeight: 600, fontSize: "1rem" }}>{item.caption}</p>
                     </div>
                   </div>
                 ))}
@@ -389,10 +388,10 @@ export default function MTCCSUFSite() {
             ) : (
               <div className="gallery-grid">
                 {galleryFallback.map((item, i) => (
-                  <div key={item} style={{ aspectRatio:"4/3", background:"var(--navy3)", display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:"0.75rem", padding:"1rem" }}>
-                    <div style={{ width:"2rem", height:1, background:"var(--gold)" }} />
-                    <p className="serif" style={{ fontSize:"1rem", color:"var(--white)", fontStyle:"italic", textAlign:"center" }}>{item}</p>
-                    <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.2em", color:"var(--gold)", textTransform:"uppercase" }}>#{String(i+1).padStart(2,"0")}</span>
+                  <div key={item} style={{ aspectRatio: "4/3", background: "var(--navy3)", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "0.75rem", padding: "1rem" }}>
+                    <div style={{ width: "2rem", height: 1, background: "var(--gold)" }} />
+                    <p className="serif" style={{ fontSize: "1rem", color: "var(--white)", fontStyle: "italic", textAlign: "center" }}>{item}</p>
+                    <span className="mono" style={{ fontSize: "0.56rem", letterSpacing: "0.2em", color: "var(--gold)", textTransform: "uppercase" }}>#{String(i + 1).padStart(2, "0")}</span>
                   </div>
                 ))}
               </div>
@@ -401,29 +400,29 @@ export default function MTCCSUFSite() {
         </section>
 
         {/* ── CONTACT ── */}
-        <section id="contact" className="section-shell section-pad" style={{ background:"var(--navy)", borderTop:"1px solid var(--border)" }}>
+        <section id="contact" className="section-shell section-pad" style={{ background: "var(--navy)", borderTop: "1px solid var(--border)" }}>
           <div className="section-inner">
             <div className="contact-layout">
               <div>
                 <span className="section-label">Contact</span>
-                <h2 className="serif" style={{ fontSize:"clamp(2rem,5vw,3.5rem)", fontWeight:700, color:"var(--white)", marginTop:"0.75rem", lineHeight:1.1 }}>Connect With Us</h2>
+                <h2 className="serif" style={{ fontSize: "clamp(2rem,5vw,3.5rem)", fontWeight: 700, color: "var(--white)", marginTop: "0.75rem", lineHeight: 1.1 }}>Connect With Us</h2>
                 <div className="gold-bar" />
-                <p style={{ marginTop:"1.25rem", fontSize:"0.875rem", color:"var(--muted)", lineHeight:1.9 }}>
+                <p style={{ marginTop: "1.25rem", fontSize: "0.875rem", color: "var(--muted)", lineHeight: 1.9 }}>
                   Reach out for collaborations, events, or to learn more about joining the MTC community.
                 </p>
               </div>
               <div>
                 <hr className="divider" />
                 {[
-                  { icon:"◈", label:"Instagram", value:"@mtccsuf", href:"https://www.instagram.com/mtccsuf" },
-                  { icon:"◆", label:"LinkedIn", value:"Muslim Tech Collaborative @ CSUF", href:"https://www.linkedin.com/company/muslim-tech-collaborative-at-csuf/posts/?feedView=all" },
-                  { icon:"◎", label:"Email", value:"csufmtc@gmail.com", href:"mailto:csufmtc@gmail.com" },
+                  { icon: "◈", label: "Instagram", value: "@mtccsuf", href: "https://www.instagram.com/mtccsuf" },
+                  { icon: "◆", label: "LinkedIn", value: "Muslim Tech Collaborative @ CSUF", href: "https://www.linkedin.com/company/muslim-tech-collaborative-at-csuf/posts/?feedView=all" },
+                  { icon: "◎", label: "Email", value: "csufmtc@gmail.com", href: "mailto:csufmtc@gmail.com" },
                 ].map(({ icon, label, value, href }) => (
                   <a key={label} href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noreferrer" className="contact-link">
                     <div className="contact-icon">{icon}</div>
-                    <div style={{ minWidth:0, flex:1 }}>
-                      <div className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.2em", textTransform:"uppercase", color:"var(--muted)" }}>{label}</div>
-                      <div className="serif" style={{ fontSize:"clamp(0.95rem,2vw,1.15rem)", color:"var(--white)", marginTop:"0.2rem", wordBreak:"break-word" }}>{value}</div>
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div className="mono" style={{ fontSize: "0.6rem", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--muted)" }}>{label}</div>
+                      <div className="serif" style={{ fontSize: "clamp(0.95rem,2vw,1.15rem)", color: "var(--white)", marginTop: "0.2rem", wordBreak: "break-word" }}>{value}</div>
                     </div>
                     <span className="contact-arrow">→</span>
                   </a>
@@ -435,17 +434,17 @@ export default function MTCCSUFSite() {
       </main>
 
       {/* ── FOOTER ── */}
-      <footer style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)", padding:"2rem 1.5rem", display:"flex", flexDirection:"column", alignItems:"center", gap:"1.25rem" }}>
-        <div style={{ display:"flex", justifyContent:"center", gap:"1.5rem", flexWrap:"wrap" }}>
-          <a href="#/sitemap" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Sitemap</a>
-          <a href="#/opensource" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Open Source</a>
-          <a href="#/upload" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Photo Upload</a>
-          <a href="#/graduates" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Graduates</a>
+      <footer style={{ background: "var(--navy2)", borderTop: "1px solid var(--border)", padding: "2rem 1.5rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.25rem" }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: "1.5rem", flexWrap: "wrap" }}>
+          <a href="#/sitemap" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Sitemap</a>
+          <a href="#/opensource" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Open Source</a>
+          <a href="#/upload" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Photo Upload</a>
+          <a href="#/graduates" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Graduates</a>
         </div>
-        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", width:"100%", maxWidth:"1280px", flexWrap:"wrap", gap:"0.75rem", borderTop:"1px solid rgba(201,168,76,0.08)", paddingTop:"1.25rem" }}>
-          <span className="mono" style={{ fontSize:"0.65rem", letterSpacing:"0.25em", textTransform:"uppercase", color:"var(--gold)" }}>MTC</span>
-          <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"var(--muted)" }}>© Muslim Tech Collaborative @ CSUF</span>
-          <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"var(--muted)" }}>Fullerton, CA</span>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", width: "100%", maxWidth: "1280px", flexWrap: "wrap", gap: "0.75rem", borderTop: "1px solid rgba(201,168,76,0.08)", paddingTop: "1.25rem" }}>
+          <span className="mono" style={{ fontSize: "0.65rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--gold)" }}>MTC</span>
+          <span className="mono" style={{ fontSize: "0.56rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--muted)" }}>© Muslim Tech Collaborative @ CSUF</span>
+          <span className="mono" style={{ fontSize: "0.56rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--muted)" }}>Fullerton, CA</span>
         </div>
       </footer>
     </div>

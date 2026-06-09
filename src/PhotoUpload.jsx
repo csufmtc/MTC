@@ -392,14 +392,14 @@ export default function PhotoUpload() {
           </div>
         </div>
 
-        <footer style={{ background:"rgba(255,255,255,0.05)", borderTop:"1px solid rgba(255,255,255,0.1)", padding:"2rem 1.5rem", display:"flex", flexDirection:"column", alignItems:"center", gap:"1.25rem", color:"rgba(255,255,255,0.7)", marginTop:"2rem" }}>
-          <div style={{ display:"flex", justifyContent:"center", gap:"1.5rem", flexWrap:"wrap" }}>
-            <button onClick={cancelCrop} className="mono" style={{ background:"none", border:"none", cursor:"pointer", fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"rgba(255,255,255,0.6)", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="#F7DD7D"} onMouseLeave={(e)=>e.target.style.color="rgba(255,255,255,0.6)"}>Home</button>
-            <a href="#/sitemap" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"rgba(255,255,255,0.6)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="#F7DD7D"} onMouseLeave={(e)=>e.target.style.color="rgba(255,255,255,0.6)"}>Sitemap</a>
-            <a href="#/opensource" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"rgba(255,255,255,0.6)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="#F7DD7D"} onMouseLeave={(e)=>e.target.style.color="rgba(255,255,255,0.6)"}>Open Source</a>
-            <a href="#/graduates" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"rgba(255,255,255,0.6)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="#F7DD7D"} onMouseLeave={(e)=>e.target.style.color="rgba(255,255,255,0.6)"}>Graduates</a>
+        <footer style={{ background: "rgba(255,255,255,0.05)", borderTop: "1px solid rgba(255,255,255,0.1)", padding: "2rem 1.5rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.25rem", color: "rgba(255,255,255,0.7)", marginTop: "2rem" }}>
+          <div style={{ display: "flex", justifyContent: "center", gap: "1.5rem", flexWrap: "wrap" }}>
+            <button onClick={cancelCrop} className="mono" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#F7DD7D"} onMouseLeave={(e) => e.target.style.color = "rgba(255,255,255,0.6)"}>Home</button>
+            <a href="#/sitemap" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#F7DD7D"} onMouseLeave={(e) => e.target.style.color = "rgba(255,255,255,0.6)"}>Sitemap</a>
+            <a href="#/opensource" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#F7DD7D"} onMouseLeave={(e) => e.target.style.color = "rgba(255,255,255,0.6)"}>Open Source</a>
+            <a href="#/graduates" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "rgba(255,255,255,0.6)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "#F7DD7D"} onMouseLeave={(e) => e.target.style.color = "rgba(255,255,255,0.6)"}>Graduates</a>
           </div>
-          <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"rgba(255,255,255,0.5)" }}>© Muslim Tech Collaborative @ CSUF</span>
+          <span className="mono" style={{ fontSize: "0.56rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "rgba(255,255,255,0.5)" }}>© Muslim Tech Collaborative @ CSUF</span>
         </footer>
 
         {toast && <div className="pu-toast">{toast}</div>}

@@ -3,12 +3,12 @@ import { useEffect } from "react";
 // 2026 graduating board / members honored by MTC.
 // Drop each photo into public/graduates/ using the `photo` filename below.
 const GRADUATES = [
-  { name: "Kamal Shmara",   degree: "B.A. Business Administration", photo: "/graduates/kamal-shmara.jpeg" },
-  { name: "Talhah Raheem",  degree: "B.S. Computer Science",        photo: "/graduates/talhah-raheem.jpeg" },
-  { name: "Zunaira Rahat",  degree: "B.S. Computer Science",        photo: "/graduates/zunaira-rahat.jpeg" },
-  { name: "Yawer Mahmood",  degree: "M.S. Information Systems",     photo: "/graduates/yawer-mahmood.jpeg" },
-  { name: "Ahmad Zaidan",   degree: "B.S. Computer Science",        photo: "/graduates/ahmad-zaidan.jpeg" },
-  { name: "Ahad Ahmad",     degree: "B.S. Computer Science",        photo: "/graduates/ahad-ahmad.jpeg" },
+  { name: "Kamal Shmara", degree: "B.A. Business Administration", photo: "/graduates/kamal-shmara.jpeg" },
+  { name: "Talhah Raheem", degree: "B.S. Computer Science", photo: "/graduates/talhah-raheem.jpeg" },
+  { name: "Zunaira Rahat", degree: "B.S. Computer Science", photo: "/graduates/zunaira-rahat.jpeg" },
+  { name: "Yawer Mahmood", degree: "M.S. Information Systems", photo: "/graduates/yawer-mahmood.jpeg" },
+  { name: "Ahmad Zaidan", degree: "B.S. Computer Science", photo: "/graduates/ahmad-zaidan.jpeg" },
+  { name: "Ahad Ahmad", degree: "B.S. Computer Science", photo: "/graduates/ahad-ahmad.jpeg" },
 ];
 
 const initials = (n) => n.split(" ").map((p) => p[0]).join("").slice(0, 2).toUpperCase();
@@ -61,17 +61,17 @@ export default function GraduatesPage() {
       `}</style>
 
       {/* HEADER */}
-      <header style={{ position:"sticky", top:0, zIndex:100, borderBottom:"1px solid rgba(201,168,76,0.12)", background:"rgba(5,10,20,0.92)", backdropFilter:"blur(16px)" }}>
-        <div style={{ maxWidth:1120, margin:"0 auto", padding:"0 1.5rem", display:"flex", alignItems:"center", justifyContent:"space-between", height:72 }}>
-          <span className="mono" style={{ fontSize:"0.75rem", letterSpacing:"0.35em", color:"var(--gold)", fontWeight:500 }}>MTC</span>
+      <header style={{ position: "sticky", top: 0, zIndex: 100, borderBottom: "1px solid rgba(201,168,76,0.12)", background: "rgba(5,10,20,0.92)", backdropFilter: "blur(16px)" }}>
+        <div style={{ maxWidth: 1120, margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 72 }}>
+          <span className="mono" style={{ fontSize: "0.75rem", letterSpacing: "0.35em", color: "var(--gold)", fontWeight: 500 }}>MTC</span>
           <button onClick={goHome} className="grad-back">← Back to Site</button>
         </div>
       </header>
 
-      <main style={{ paddingTop:"4rem", paddingBottom:"6rem" }}>
-        <div className="grad-wrap" style={{ textAlign:"center" }}>
+      <main style={{ paddingTop: "4rem", paddingBottom: "6rem" }}>
+        <div className="grad-wrap" style={{ textAlign: "center" }}>
           <span className="grad-section-label">Class of 2026</span>
-          <h1 className="serif" style={{ fontSize:"clamp(2.2rem,6vw,4rem)", fontWeight:700, color:"var(--white)", marginTop:"0.75rem", lineHeight:1.1 }}>
+          <h1 className="serif" style={{ fontSize: "clamp(2.2rem,6vw,4rem)", fontWeight: 700, color: "var(--white)", marginTop: "0.75rem", lineHeight: 1.1 }}>
             Celebrating Our Graduates
           </h1>
           <div className="gold-bar" />
@@ -80,27 +80,27 @@ export default function GraduatesPage() {
         {/* THANK YOU NOTE */}
         <div className="grad-wrap">
           <div className="grad-note">
-            <p className="serif" style={{ fontSize:"clamp(1.15rem,2.6vw,1.5rem)", fontWeight:300, fontStyle:"italic", color:"var(--white)", lineHeight:1.7 }}>
+            <p className="serif" style={{ fontSize: "clamp(1.15rem,2.6vw,1.5rem)", fontWeight: 300, fontStyle: "italic", color: "var(--white)", lineHeight: 1.7 }}>
               Thank you, graduating board, for contributing to the growth and success of Muslim Tech
               Collaborative at CSUF. Your dedication, leadership, and commitment have helped shape this
               organization into a stronger community for students interested in technology, mentorship, and
               professional growth. The time, effort, and impact you have made will continue to be valued and
               remembered for years to come.
             </p>
-            <p className="serif" style={{ fontSize:"clamp(1.15rem,2.6vw,1.5rem)", fontWeight:300, fontStyle:"italic", color:"var(--white)", lineHeight:1.7, marginTop:"1.5rem" }}>
+            <p className="serif" style={{ fontSize: "clamp(1.15rem,2.6vw,1.5rem)", fontWeight: 300, fontStyle: "italic", color: "var(--white)", lineHeight: 1.7, marginTop: "1.5rem" }}>
               With that, we congratulate the graduating Class of 2026 as well and wish you the very best in
               your careers and future endeavors after college.
             </p>
-            <p className="mono" style={{ fontSize:"0.6rem", letterSpacing:"0.25em", textTransform:"uppercase", color:"var(--gold)", marginTop:"2rem" }}>
+            <p className="mono" style={{ fontSize: "0.6rem", letterSpacing: "0.25em", textTransform: "uppercase", color: "var(--gold)", marginTop: "2rem" }}>
               — With gratitude, Muslim Tech Collaborative @ CSUF
             </p>
           </div>
         </div>
 
         {/* GRADUATE CARDS */}
-        <div className="grad-wrap" style={{ marginTop:"3.5rem" }}>
+        <div className="grad-wrap" style={{ marginTop: "3.5rem" }}>
           <span className="grad-section-label">The Graduates</span>
-          <div className="grad-grid" style={{ marginTop:"1.25rem" }}>
+          <div className="grad-grid" style={{ marginTop: "1.25rem" }}>
             {GRADUATES.map((g) => (
               <div key={g.name} className="grad-card">
                 <div className="grad-photo-wrap">
@@ -114,11 +114,11 @@ export default function GraduatesPage() {
                       e.currentTarget.nextSibling.style.display = "flex";
                     }}
                   />
-                  <div className="grad-fallback" style={{ display:"none" }}>{initials(g.name)}</div>
+                  <div className="grad-fallback" style={{ display: "none" }}>{initials(g.name)}</div>
                 </div>
                 <div className="grad-meta">
-                  <h3 className="serif" style={{ fontSize:"1.3rem", fontWeight:700, color:"var(--gold2)", lineHeight:1.2 }}>{g.name}</h3>
-                  <p style={{ fontSize:"0.85rem", color:"var(--white)", marginTop:"0.35rem", lineHeight:1.5 }}>{g.degree}</p>
+                  <h3 className="serif" style={{ fontSize: "1.3rem", fontWeight: 700, color: "var(--gold2)", lineHeight: 1.2 }}>{g.name}</h3>
+                  <p style={{ fontSize: "0.85rem", color: "var(--white)", marginTop: "0.35rem", lineHeight: 1.5 }}>{g.degree}</p>
                 </div>
               </div>
             ))}
@@ -126,14 +126,14 @@ export default function GraduatesPage() {
         </div>
       </main>
 
-      <footer style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)", padding:"2rem 1.5rem", display:"flex", flexDirection:"column", alignItems:"center", gap:"1.25rem" }}>
-        <div style={{ display:"flex", justifyContent:"center", gap:"1.5rem", flexWrap:"wrap" }}>
-          <button onClick={goHome} className="mono" style={{ background:"none", border:"none", cursor:"pointer", fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Home</button>
-          <a href="#/sitemap" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Sitemap</a>
-          <a href="#/opensource" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Open Source</a>
-          <a href="#/upload" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Photo Upload</a>
+      <footer style={{ background: "var(--navy2)", borderTop: "1px solid var(--border)", padding: "2rem 1.5rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.25rem" }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: "1.5rem", flexWrap: "wrap" }}>
+          <button onClick={goHome} className="mono" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Home</button>
+          <a href="#/sitemap" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Sitemap</a>
+          <a href="#/opensource" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Open Source</a>
+          <a href="#/upload" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Photo Upload</a>
         </div>
-        <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"var(--muted)" }}>© Muslim Tech Collaborative @ CSUF · Congratulations Class of 2026</span>
+        <span className="mono" style={{ fontSize: "0.56rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--muted)" }}>© Muslim Tech Collaborative @ CSUF · Congratulations Class of 2026</span>
       </footer>
     </div>
   );

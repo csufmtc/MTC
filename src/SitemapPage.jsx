@@ -32,13 +32,13 @@ export default function SitemapPage() {
         { name: "Open Source Info & Repository", path: "/#/opensource", desc: "Developer contribution guides, repository details, and source licensing." }
       ]
     },
-    {
-      title: "Administrative Portal",
-      description: "Protected offline utility to manage events, board members, and offline media.",
-      items: [
-        { name: "Admin Dashboard Control", path: "/admin.html", desc: "Management portal to add/remove events, adjust team rankings, and configure content." }
-      ]
-    }
+    // {
+    //   title: "Administrative Portal",
+    //   description: "Protected offline utility to manage events, board members, and offline media.",
+    //   items: [
+    //     { name: "Admin Dashboard Control", path: "/admin.html", desc: "Management portal to add/remove events, adjust team rankings, and configure content." }
+    //   ]
+    // }
   ];
 
   return (
@@ -78,32 +78,32 @@ export default function SitemapPage() {
       `}</style>
 
       {/* HEADER */}
-      <header style={{ position:"sticky", top:0, zIndex:100, borderBottom:"1px solid rgba(201,168,76,0.12)", background:"rgba(5,10,20,0.92)", backdropFilter:"blur(16px)" }}>
-        <div style={{ maxWidth:960, margin:"0 auto", padding:"0 1.5rem", display:"flex", alignItems:"center", justifyContent:"space-between", height:72 }}>
-          <span className="mono" style={{ fontSize:"0.75rem", letterSpacing:"0.35em", color:"var(--gold)", fontWeight:500, cursor:"pointer" }} onClick={goHome}>MTC</span>
+      <header style={{ position: "sticky", top: 0, zIndex: 100, borderBottom: "1px solid rgba(201,168,76,0.12)", background: "rgba(5,10,20,0.92)", backdropFilter: "blur(16px)" }}>
+        <div style={{ maxWidth: 960, margin: "0 auto", padding: "0 1.5rem", display: "flex", alignItems: "center", justifyContent: "space-between", height: 72 }}>
+          <span className="mono" style={{ fontSize: "0.75rem", letterSpacing: "0.35em", color: "var(--gold)", fontWeight: 500, cursor: "pointer" }} onClick={goHome}>MTC</span>
           <button onClick={goHome} className="sm-back">← Back to Site</button>
         </div>
       </header>
 
-      <main style={{ paddingTop:"4rem", paddingBottom:"6rem" }}>
-        <div className="sm-wrap" style={{ textAlign:"center" }}>
+      <main style={{ paddingTop: "4rem", paddingBottom: "6rem" }}>
+        <div className="sm-wrap" style={{ textAlign: "center" }}>
           <span className="sm-section-label">Site Map Directory</span>
-          <h1 className="serif" style={{ fontSize:"clamp(2.2rem,6vw,4rem)", fontWeight:700, color:"var(--white)", marginTop:"0.75rem", lineHeight:1.1 }}>
+          <h1 className="serif" style={{ fontSize: "clamp(2.2rem,6vw,4rem)", fontWeight: 700, color: "var(--white)", marginTop: "0.75rem", lineHeight: 1.1 }}>
             Website Infrastructure
           </h1>
           <div className="gold-bar" />
         </div>
 
-        <div className="sm-wrap" style={{ marginTop:"2rem" }}>
+        <div className="sm-wrap" style={{ marginTop: "2rem" }}>
           {categories.map((cat) => (
             <div key={cat.title} className="sm-card">
               <h2 className="serif sm-card-title">{cat.title}</h2>
               <p className="sm-card-desc">{cat.description}</p>
-              
-              <div style={{ display:"flex", flexDirection:"column" }}>
+
+              <div style={{ display: "flex", flexDirection: "column" }}>
                 {cat.items.map((item) => (
                   <a key={item.name} href={item.path} className="sm-link-row">
-                    <div style={{ paddingRight:"1rem" }}>
+                    <div style={{ paddingRight: "1rem" }}>
                       <span className="serif sm-link-name">{item.name}</span>
                       <p className="sm-link-desc">{item.desc}</p>
                     </div>
@@ -116,14 +116,14 @@ export default function SitemapPage() {
         </div>
       </main>
 
-      <footer style={{ background:"var(--navy2)", borderTop:"1px solid var(--border)", padding:"2rem 1.5rem", display:"flex", flexDirection:"column", alignItems:"center", gap:"1.25rem" }}>
-        <div style={{ display:"flex", justifyContent:"center", gap:"1.5rem", flexWrap:"wrap" }}>
-          <button onClick={goHome} className="mono" style={{ background:"none", border:"none", cursor:"pointer", fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Home</button>
-          <a href="#/opensource" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Open Source</a>
-          <a href="#/upload" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Photo Upload</a>
-          <a href="#/graduates" className="mono" style={{ fontSize:"0.62rem", letterSpacing:"0.15em", textTransform:"uppercase", color:"var(--muted)", textDecoration:"none", transition:"color 0.2s" }} onMouseEnter={(e)=>e.target.style.color="var(--gold)"} onMouseLeave={(e)=>e.target.style.color="var(--muted)"}>Graduates</a>
+      <footer style={{ background: "var(--navy2)", borderTop: "1px solid var(--border)", padding: "2rem 1.5rem", display: "flex", flexDirection: "column", alignItems: "center", gap: "1.25rem" }}>
+        <div style={{ display: "flex", justifyContent: "center", gap: "1.5rem", flexWrap: "wrap" }}>
+          <button onClick={goHome} className="mono" style={{ background: "none", border: "none", cursor: "pointer", fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Home</button>
+          <a href="#/opensource" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Open Source</a>
+          <a href="#/upload" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Photo Upload</a>
+          <a href="#/graduates" className="mono" style={{ fontSize: "0.62rem", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--muted)", textDecoration: "none", transition: "color 0.2s" }} onMouseEnter={(e) => e.target.style.color = "var(--gold)"} onMouseLeave={(e) => e.target.style.color = "var(--muted)"}>Graduates</a>
         </div>
-        <span className="mono" style={{ fontSize:"0.56rem", letterSpacing:"0.16em", textTransform:"uppercase", color:"var(--muted)" }}>© Muslim Tech Collaborative @ CSUF</span>
+        <span className="mono" style={{ fontSize: "0.56rem", letterSpacing: "0.16em", textTransform: "uppercase", color: "var(--muted)" }}>© Muslim Tech Collaborative @ CSUF</span>
       </footer>
     </div>
   );
