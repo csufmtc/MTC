@@ -70,14 +70,14 @@ export default function MTCCSUFSite() {
   const eventsToShow = events.length > 0 ? events : fallbackEvents;
 
   return (
-    <div style={{ minHeight: "100vh", background: "#050A14", color: "#F5F0E8", fontFamily: "Georgia, serif" }}>
+    <div style={{ minHeight: "100vh", background: "#050A14", color: "#f7f3eeff", fontFamily: "Georgia, serif" }}>
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=DM+Mono:wght@300;400;500&display=swap');
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         :root {
-          --navy: #050A14; --navy2: #0B1628; --navy3: #0F1E35;
+          --navy: #050A14; --navy2: #0B1628; --navy3: #0f1d32ff;
           --gold: #C9A84C; --gold2: #E8C96A; --gold3: #F5E098;
-          --white: #F5F0E8; --muted: #8A95A3; --border: rgba(201,168,76,0.18);
+          --white: #f1efebff; --muted: #8A95A3; --border: rgba(201,168,76,0.18);
         }
         html { scroll-behavior: smooth; }
         .serif { font-family: 'Cormorant Garamond', Georgia, serif; }

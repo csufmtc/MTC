@@ -77,6 +77,16 @@ function writeJSON(file, data) {
   fs.writeFileSync(file, JSON.stringify(data, null, 2), 'utf8');
 }
 
+// ── Admin password (server-side only — never sent to browser) ──
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Mtc@2026';
+
+// POST /api/auth — password check (returns 200 ok or 401 unauthorized)
+app.post('/api/auth', (req, res) => {
+  const { password } = req.body;
+  if (password === ADMIN_PASSWORD) return res.json({ ok: true });
+  return res.status(401).json({ ok: false });
+});
+
 // ═══════════════════════════════════════════
 //  EVENTS API
 // ═══════════════════════════════════════════

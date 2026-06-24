@@ -375,25 +375,38 @@
 
   <script>
     const API = 'http://localhost:3001';
-    const CORRECT_PW = 'Mtc@2026';
-    const SESSION_KEY = 'mtc_admin_auth';
+    const SESSION_KEY = '_mtc_s';
 
     // ── PASSWORD GATE ──
-    function checkPassword() {
+    async function checkPassword() {
       const input = document.getElementById('gate-pw');
       const errEl = document.getElementById('gate-err');
-      if (input.value === CORRECT_PW) {
-        sessionStorage.setItem(SESSION_KEY, '1');
-        document.getElementById('gate').classList.add('hidden');
-        errEl.textContent = '';
-        init();
-      } else {
-        errEl.textContent = '❌ Incorrect password. Try again.';
-        input.value = '';
-        input.classList.add('shake');
-        setTimeout(() => input.classList.remove('shake'), 400);
-        input.focus();
+      const btn   = document.querySelector('.gate-btn');
+      btn.textContent = 'Checking…';
+      btn.disabled = true;
+      try {
+        const r = await fetch(`${API}/api/auth`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password: input.value })
+        });
+        if (r.ok) {
+          sessionStorage.setItem(SESSION_KEY, '1');
+          document.getElementById('gate').classList.add('hidden');
+          errEl.textContent = '';
+          init();
+        } else {
+          errEl.textContent = '❌ Incorrect password. Try again.';
+          input.value = '';
+          input.classList.add('shake');
+          setTimeout(() => input.classList.remove('shake'), 400);
+          input.focus();
+        }
+      } catch {
+        errEl.textContent = '⚠️ Cannot reach admin server. Run: npm run admin';
       }
+      btn.textContent = 'Unlock →';
+      btn.disabled = false;
     }
     function togglePw() {
       const input = document.getElementById('gate-pw');
