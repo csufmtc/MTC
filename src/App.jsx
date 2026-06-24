@@ -145,7 +145,8 @@ export default function MTCCSUFSite() {
         @media (min-width: 600px) { .team-grid { grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); } }
         .team-card { background:var(--navy2); padding:1.5rem 1rem; text-align:center; border:1px solid transparent; transition:border-color .3s,transform .3s; }
         .team-card:hover { border-color:var(--gold); transform:translateY(-3px); }
-        .team-avatar { width:52px; height:52px; border-radius:50%; margin:0 auto 1rem; background:linear-gradient(135deg,var(--navy3),var(--gold)); display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--navy); font-weight:700; }
+        .team-avatar { width:120px; height:120px; border-radius:50%; margin:0 auto 1rem; background:linear-gradient(135deg,var(--navy3),var(--gold)); display:flex; align-items:center; justify-content:center; font-family:'DM Mono',monospace; font-size:0.82rem; color:var(--navy); font-weight:700; overflow:hidden; border:2px solid rgba(201,168,76,0.35); }
+        .team-avatar img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
 
         /* EVENTS */
         .event-row { display:grid; gap:0.75rem; align-items:start; padding:1.5rem 0; border-bottom:1px solid var(--border); grid-template-columns:1fr; transition:padding-left .25s; }
@@ -301,7 +302,12 @@ export default function MTCCSUFSite() {
               <div className="team-grid">
                 {currentTeam.map((member) => (
                   <div key={member.name} className="team-card">
-                    <div className="team-avatar">{initials(member.name)}</div>
+                    <div className="team-avatar">
+                      {member.photo
+                        ? <img src={member.photo} alt={member.name} />
+                        : initials(member.name)
+                      }
+                    </div>
                     <h3 className="serif" style={{ fontSize: "1.05rem", fontWeight: 700, color: "var(--white)" }}>{member.name}</h3>
                     <p className="mono" style={{ fontSize: "0.56rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--gold)", marginTop: "0.3rem" }}>{member.role}</p>
                   </div>

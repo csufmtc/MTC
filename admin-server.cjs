@@ -16,22 +16,23 @@ const app  = express();
 const PORT = 3001;
 
 // ── Paths ──
-const PUBLIC_DIR   = path.join(__dirname, 'public');
-const DATA_DIR     = path.join(PUBLIC_DIR, 'data');
-const GALLERY_DIR  = path.join(PUBLIC_DIR, 'gallery');
-const EVENTS_FILE  = path.join(DATA_DIR, 'events.json');
-const GALLERY_FILE = path.join(DATA_DIR, 'gallery.json');
-const BOARD_FILE   = path.join(DATA_DIR, 'board.json');
+const PUBLIC_DIR      = path.join(__dirname, 'public');
+const DATA_DIR        = path.join(PUBLIC_DIR, 'data');
+const GALLERY_DIR     = path.join(PUBLIC_DIR, 'gallery');
+const BOARD_PHOTO_DIR = path.join(PUBLIC_DIR, 'board-photos');
+const EVENTS_FILE     = path.join(DATA_DIR, 'events.json');
+const GALLERY_FILE    = path.join(DATA_DIR, 'gallery.json');
+const BOARD_FILE      = path.join(DATA_DIR, 'board.json');
 
 // Ensure folders exist
-[DATA_DIR, GALLERY_DIR].forEach(d => fs.mkdirSync(d, { recursive: true }));
+[DATA_DIR, GALLERY_DIR, BOARD_PHOTO_DIR].forEach(d => fs.mkdirSync(d, { recursive: true }));
 
 // ── Middleware ──
 app.use(cors());
 app.use(express.json());
 app.use(express.static(PUBLIC_DIR)); // serve public/ so admin.html loads
 
-// ── Multer (image uploads) ──
+// ── Multer (gallery image uploads) ──
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, GALLERY_DIR),
   filename: (req, file, cb) => {
@@ -43,6 +44,24 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB max
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith('image/')) cb(null, true);
+    else cb(new Error('Only image files allowed'));
+  }
+});
+
+// ── Multer (board member headshot uploads) ──
+const boardPhotoStorage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, BOARD_PHOTO_DIR),
+  filename: (req, file, cb) => {
+    const ext  = path.extname(file.originalname).toLowerCase() || '.jpg';
+    const name = `member_${req.params.id}_${Date.now()}${ext}`;
+    cb(null, name);
+  }
+});
+const uploadBoardPhoto = multer({
+  storage: boardPhotoStorage,
+  limits: { fileSize: 8 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith('image/')) cb(null, true);
     else cb(new Error('Only image files allowed'));
@@ -189,11 +208,53 @@ app.put('/api/board/:id/rank', (req, res) => {
 });
 
 
+// POST upload board member headshot
+app.post('/api/board/:id/photo', uploadBoardPhoto.single('photo'), (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+
+  const board = readJSON(BOARD_FILE);
+  const member = board.find(m => m.id === id);
+  if (!member) return res.status(404).json({ error: 'Member not found' });
+
+  // Delete old headshot if it exists
+  if (member.photo) {
+    const oldFile = path.join(PUBLIC_DIR, member.photo);
+    if (fs.existsSync(oldFile)) fs.unlinkSync(oldFile);
+  }
+
+  member.photo = `/board-photos/${req.file.filename}`;
+  writeJSON(BOARD_FILE, board);
+  res.json({ ok: true, photo: member.photo });
+});
+
+// DELETE board member headshot
+app.delete('/api/board/:id/photo', (req, res) => {
+  const id = parseInt(req.params.id, 10);
+  const board = readJSON(BOARD_FILE);
+  const member = board.find(m => m.id === id);
+  if (!member) return res.status(404).json({ error: 'Member not found' });
+
+  if (member.photo) {
+    const filePath = path.join(PUBLIC_DIR, member.photo);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    delete member.photo;
+    writeJSON(BOARD_FILE, board);
+  }
+  res.json({ ok: true });
+});
+
 // DELETE board member
 app.delete('/api/board/:id', (req, res) => {
   const id = parseInt(req.params.id, 10);
-  const board = readJSON(BOARD_FILE).filter(m => m.id !== id);
-  writeJSON(BOARD_FILE, board);
+  const board = readJSON(BOARD_FILE);
+  // Also clean up headshot
+  const member = board.find(m => m.id === id);
+  if (member && member.photo) {
+    const filePath = path.join(PUBLIC_DIR, member.photo);
+    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  }
+  writeJSON(BOARD_FILE, board.filter(m => m.id !== id));
   res.json({ ok: true });
 });
 

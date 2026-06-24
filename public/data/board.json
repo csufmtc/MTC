@@ -4,7 +4,8 @@
     "term": "Spring 2026",
     "name": "Ahad Ahmad",
     "role": "President",
-    "rank": 2
+    "rank": 2,
+    "photo": "/board-photos/member_1778706483765_1782334131518.jpeg"
   },
   {
     "id": 1777599231246,
@@ -25,7 +26,8 @@
     "term": "Spring 2026",
     "name": "Talha Raheem",
     "role": "VP of Projects",
-    "rank": 9
+    "rank": 9,
+    "photo": "/board-photos/member_1778292437625_1782334157671.jpeg"
   },
   {
     "id": 1778355202266,
@@ -39,14 +41,24 @@
     "term": "Spring 2026",
     "name": "Zunaira Rahat",
     "role": "Head of Entrepreneurship",
-    "rank": 12
+    "rank": 12,
+    "photo": "/board-photos/member_1778355315523_1782334141430.jpeg"
   },
   {
     "id": 1778355361896,
     "term": "Spring 2026",
     "name": "Kamal Shmara",
     "role": "Head of Professional Development",
-    "rank": 13
+    "rank": 13,
+    "photo": "/board-photos/member_1778355361896_1782334149244.jpeg"
+  },
+  {
+    "id": 1778706863992,
+    "term": "Spring 2026",
+    "name": "Ruman Saiyed",
+    "role": "Treasurer X Webmaster",
+    "rank": 15,
+    "photo": "/board-photos/member_1778706863992_1782334082033.jpeg"
   },
   {
     "id": 1778355253964,
@@ -63,11 +75,12 @@
     "rank": 17
   },
   {
-    "id": 1778706863992,
-    "term": "Spring 2026",
+    "id": 1778706842962,
+    "term": "Fall 2026",
     "name": "Ruman Saiyed",
-    "role": "Treasurer X Webmaster",
-    "rank": 15
+    "role": "President X Webmaster",
+    "rank": 2,
+    "photo": "/board-photos/member_1778706842962_1782334065526.jpeg"
   },
   {
     "id": 1778355455227,
@@ -88,35 +101,54 @@
     "term": "Fall 2026",
     "name": "Mohammed Haroon",
     "role": "Treasurer",
-    "rank": 5
+    "rank": 7
   },
   {
     "id": 1778355482061,
     "term": "Fall 2026",
     "name": "Ali Zaidi",
     "role": "Treasurer",
-    "rank": 6
+    "rank": 8
   },
   {
-    "id": 1778706842962,
+    "id": 1782333364462,
     "term": "Fall 2026",
-    "name": "Ruman Saiyed",
-    "role": "President X Webmaster",
-    "rank": 2
+    "name": "Abdul Muqeet",
+    "role": "Treasurer",
+    "rank": 9,
+    "photo": "/board-photos/member_1782333364462_1782333475412.jpg"
+  },
+  {
+    "id": 1782333397307,
+    "term": "Fall 2026",
+    "name": "Ammar Mohiuddin",
+    "role": "VP of Marketing",
+    "rank": 6,
+    "photo": "/board-photos/member_1782333397307_1782333666093.jpg"
+  },
+  {
+    "id": 1782333432431,
+    "term": "Fall 2026",
+    "name": "Babekir Babekir",
+    "role": "VP of Projects",
+    "rank": 5,
+    "photo": "/board-photos/member_1782333432431_1782333518295.jpg"
   },
   {
     "id": 1778706014865,
     "term": "Fall 2025",
     "name": "Ahad Ahmad",
     "role": "President",
-    "rank": 3
+    "rank": 3,
+    "photo": "/board-photos/member_1778706014865_1782334188134.jpeg"
   },
   {
     "id": 1778706084444,
     "term": "Fall 2025",
     "name": "Ahmad Zaidan",
     "role": "Vide President",
-    "rank": 5
+    "rank": 5,
+    "photo": "/board-photos/member_1778706084444_1782334192487.jpeg"
   },
   {
     "id": 1778706110341,
@@ -137,21 +169,24 @@
     "term": "Fall 2025",
     "name": "Talhah Raheem",
     "role": "VP of Projects",
-    "rank": 8
+    "rank": 8,
+    "photo": "/board-photos/member_1778706141765_1782334198787.jpeg"
   },
   {
     "id": 1778706177842,
     "term": "Fall 2025",
     "name": "Zunaira Rahat",
     "role": "Head of Entrepreneureship",
-    "rank": 9
+    "rank": 9,
+    "photo": "/board-photos/member_1778706177842_1782334180508.jpeg"
   },
   {
     "id": 1778706422653,
     "term": "Fall 2025",
     "name": "Kamal Shmara",
     "role": "Head of Professional Development",
-    "rank": 10
+    "rank": 10,
+    "photo": "/board-photos/member_1778706422653_1782334205050.jpeg"
   },
   {
     "id": 1778706436984,
@@ -165,6 +200,7 @@
     "term": "Fall 2025",
     "name": "Yaweer Mahmood",
     "role": "Treasurer",
-    "rank": 12
+    "rank": 12,
+    "photo": "/board-photos/member_1777506282222_1782334169831.jpeg"
   }
 ]

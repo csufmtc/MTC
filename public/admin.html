@@ -140,6 +140,31 @@
     .thumb { width: 48px; height: 48px; object-fit: cover; border-radius: 0.6rem; border: 2px solid #e2e8f0; flex-shrink: 0; }
     .thumb-placeholder { width: 48px; height: 48px; border-radius: 0.6rem; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0; }
 
+    /* ── BOARD PHOTO CIRCLE ── */
+    .member-avatar {
+      width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0;
+      object-fit: cover; border: 2px solid #c7d2fe;
+      background: #f1f5f9; display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: #406AAF; font-weight: 800; letter-spacing: 0.05em;
+      overflow: hidden;
+    }
+    .member-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; display: block; }
+    .board-photo-actions { display: flex; flex-direction: column; gap: 0.3rem; flex-shrink: 0; }
+    .btn-photo-upload {
+      background: #eef2ff; color: #406AAF; border: 1.5px solid #c7d2fe;
+      border-radius: 0.5rem; padding: 0.25rem 0.5rem;
+      font-size: 0.7rem; font-weight: 700; cursor: pointer;
+      white-space: nowrap; transition: background 0.15s;
+    }
+    .btn-photo-upload:hover { background: #e0e7ff; }
+    .btn-photo-remove {
+      background: #fee2e2; color: #dc2626; border: none;
+      border-radius: 0.5rem; padding: 0.25rem 0.5rem;
+      font-size: 0.7rem; font-weight: 700; cursor: pointer; transition: background 0.2s;
+    }
+    .btn-photo-remove:hover { background: #fecaca; }
+    .photo-file-input { display: none; }
+
     .file-upload-area {
       border: 2px dashed #c7d2fe; border-radius: 1rem; padding: 1.5rem;
       text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s;
@@ -649,19 +674,32 @@
             const termMembers = grouped[term].sort((a, b) => (a.rank || 999) - (b.rank || 999));
             html += `<div style="margin-bottom: 1.5rem;">`;
             html += `<div style="font-weight: 700; color: var(--blue); font-size: 0.9rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.05em;">${term}</div>`;
-            html += termMembers.map((m, idx) => `
-              <div class="item-row" style="display: grid; grid-template-columns: auto 1fr auto; gap: 0.5rem; align-items: center;">
+            html += termMembers.map((m, idx) => {
+              const initials = m.name.split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
+              const avatarHtml = m.photo
+                ? `<img src="${API}${m.photo}?t=${Date.now()}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" onerror="this.parentElement.textContent='${initials}'" />`
+                : initials;
+              return `
+              <div class="item-row" style="display: grid; grid-template-columns: auto auto 1fr auto auto; gap: 0.6rem; align-items: center;">
                 <div style="display: flex; gap: 0.25rem; flex-direction: column;">
                   <button class="rank-btn" onclick="updateBoardRank(${m.id}, 'up')" ${idx === 0 ? 'disabled' : ''} title="Move up">▲</button>
                   <button class="rank-btn" onclick="updateBoardRank(${m.id}, 'down')" ${idx === termMembers.length - 1 ? 'disabled' : ''} title="Move down">▼</button>
                 </div>
-                <div class="thumb-placeholder">👤</div>
+                <div class="member-avatar" id="avatar-${m.id}">${avatarHtml}</div>
                 <div class="item-info">
                   <div class="name">${m.name}</div>
-                  <div class="meta">${m.role}</div>
+                  <div class="meta">${m.role} · <em style="color:#94a3b8;">${m.photo ? '✅ Has photo' : '⚠️ No photo'}</em></div>
+                </div>
+                <div class="board-photo-actions">
+                  <label class="btn-photo-upload" title="Upload headshot">
+                    📷 Photo
+                    <input class="photo-file-input" type="file" accept="image/*" onchange="uploadBoardPhoto(event, ${m.id})" />
+                  </label>
+                  ${m.photo ? `<button class="btn-photo-remove" onclick="removeBoardPhoto(${m.id})" title="Remove photo">🗑️ Remove</button>` : ''}
                 </div>
                 <button class="btn-danger" onclick="deleteBoardMember(${m.id})">Delete</button>
-              </div>`).join('');
+              </div>`;
+            }).join('');
             html += `</div>`;
           }
         });
@@ -681,6 +719,46 @@
         await renderBoardMembers();
       } catch {
         showToast('❌ Could not update rank. Is the admin server running?');
+      }
+    }
+
+    async function uploadBoardPhoto(event, id) {
+      const file = event.target.files?.[0];
+      if (!file) return;
+
+      // Quick preview while uploading
+      const avatarEl = document.getElementById(`avatar-${id}`);
+      if (avatarEl) {
+        const reader = new FileReader();
+        reader.onload = e => {
+          avatarEl.innerHTML = `<img src="${e.target.result}" alt="preview" style="width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;" />`;
+        };
+        reader.readAsDataURL(file);
+      }
+
+      const formData = new FormData();
+      formData.append('photo', file);
+
+      try {
+        const r = await fetch(`${API}/api/board/${id}/photo`, { method: 'POST', body: formData });
+        const out = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(out.error || 'Upload failed');
+        showToast('✅ Photo saved to board.json!');
+        await renderBoardMembers();
+      } catch (err) {
+        showToast(`❌ Photo upload failed: ${err.message}`);
+        await renderBoardMembers(); // revert preview
+      }
+    }
+
+    async function removeBoardPhoto(id) {
+      if (!confirm('Remove this member\'s photo?')) return;
+      try {
+        await fetch(`${API}/api/board/${id}/photo`, { method: 'DELETE' });
+        showToast('🗑️ Photo removed.');
+        await renderBoardMembers();
+      } catch {
+        showToast('❌ Could not remove photo. Is the admin server running?');
       }
     }
 
