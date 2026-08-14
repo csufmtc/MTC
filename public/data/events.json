@@ -1,5 +1,23 @@
 [
   {
+    "id": 1786732890426,
+    "title": "DISCOVERFEST TABLING",
+    "date": "2026-08-26",
+    "start": "15:00",
+    "end": "18:00",
+    "tag": "Social",
+    "desc": "COME JOIN US AT THE DISCOVERFEST!!"
+  },
+  {
+    "id": 1786732922455,
+    "title": "DISCOVERFEST DAY 2",
+    "date": "2026-08-27",
+    "start": "11:00",
+    "end": "02:00",
+    "tag": "Social",
+    "desc": "COME JOIN US AT THE DISCOVERFEST!!"
+  },
+  {
     "id": 1778355634542,
     "title": "MTC General Meeting",
     "date": "2026-08-28",

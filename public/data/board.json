@@ -105,26 +105,12 @@
     "photo": "/board-photos/member_1785778001020_1785778115024.jpg"
   },
   {
-    "id": 1782333397307,
-    "term": "Fall 2026",
-    "name": "Ammar Mohiuddin",
-    "role": "VP of Marketing",
-    "rank": 8,
-    "photo": "/board-photos/member_1782333397307_1782333666093.jpg"
-  },
-  {
     "id": 1778355469760,
     "term": "Fall 2026",
     "name": "Mohammed Haroon",
     "role": "Treasurer",
-    "rank": 9
-  },
-  {
-    "id": 1778355482061,
-    "term": "Fall 2026",
-    "name": "Ali Zaidi",
-    "role": "Treasurer",
-    "rank": 10
+    "rank": 9,
+    "photo": "/board-photos/member_1778355469760_1786732972467.jpeg"
   },
   {
     "id": 1782333364462,
@@ -139,7 +125,8 @@
     "term": "Fall 2026",
     "name": "Ahmad Alamour",
     "role": "VP of Professional Development.",
-    "rank": 7
+    "rank": 7,
+    "photo": "/board-photos/member_1785778233616_1786733015263.jpeg"
   },
   {
     "id": 1778706014865,
